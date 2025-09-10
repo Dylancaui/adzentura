@@ -1,110 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adzentura - Free Mental Health Resources</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f7f9fc;
-      color: #333;
-    }
-    header {
-      background: #4a90e2;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    .hotline {
-      background: #ff4b4b;
-      padding: 1rem;
-      text-align: center;
-      color: white;
-      font-weight: bold;
-    }
-    main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 1rem;
-    }
-    input {
-      width: 100%;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-    .results {
-      background: #fff;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .resources {
-      margin-top: 2rem;
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    a {
-      color: #4a90e2;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adzentura — Mental Health Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#6b63ff;
+  --accent:#2aa7c2;
+  --success:#10b981;
+  --bg-light:#f9fafb;
+  --bg-dark:#111827;
+  --text-light:#111827;
+  --text-dark:#f3f4f6;
+}
+
+body{
+  margin:0;
+  font-family:Inter,sans-serif;
+  background:var(--bg-light);
+  color:var(--text-light);
+  transition: all 0.3s ease;
+}
+body.dark-mode{
+  background:var(--bg-dark);
+  color:var(--text-dark);
+}
+
+a{color:var(--primary); text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 40px;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  color:white;
+  box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.logo{
+  width:50px;
+  height:50px;
+  background:white;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:24px;
+  color:var(--primary);
+}
+
+.container{
+  max-width:1400px;
+  margin:20px auto;
+  padding:0 30px;
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:25px;
+}
+
+.card{
+  background:white;
+  border-radius:16px;
+  padding:25px;
+  box-shadow:0 8px 25px rgba(12,24,40,0.08);
+  transition: all 0.3s ease;
+  opacity:0;
+  transform: translateY(20px);
+}
+body.dark-mode .card{
+  background:#1f2937;
+  color:var(--text-dark);
+}
+.card.visible{
+  opacity:1;
+  transform: translateY(0);
+}
+.card:hover{
+  transform: translateY(-5px) scale(1.02);
+  box-shadow:0 15px 40px rgba(12,24,40,0.2);
+}
+
+.btn{
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  margin-top:10px;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:white;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover{
+  transform:scale(1.05);
+  box-shadow:0 5px 15px rgba(12,24,40,0.3);
+}
+
+.section-btn{
+  margin:5px;
+  padding:10px 14px;
+  border-radius:8px;
+  border:1px solid var(--primary);
+  background:white;
+  cursor:pointer;
+  font-weight:600;
+  transition: all 0.3s ease;
+}
+.section-btn:hover{
+  transform:scale(1.05);
+  background:var(--primary);
+  color:white;
+}
+
+#disorderInput{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  transition: all 0.3s ease;
+}
+#disorderInput:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 8px rgba(107,99,255,0.3);
+  outline:none;
+}
+
+aside .card{margin-bottom:20px;}
+
+@media(max-width:1024px){
+  .container{grid-template-columns:1fr;}
+}
+
+body.dark-mode a{color:var(--accent);}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Adzentura</h1>
-    <p>Free Mental Health Resources – No Sign Ups, Just Help</p>
-  </header>
 
-  <div class="hotline">
-    Crisis Hotline (US): Dial <strong>988</strong>
+<!-- Welcome Pop-up -->
+<div id="popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:100;">
+  <div style="background:white;padding:30px;border-radius:16px;max-width:450px;text-align:center;">
+    <h2>Welcome to Adzentura</h2>
+    <p>This website is completely free, requires no sign-up, and provides mental health information, resources, and a free self-assessment quiz.</p>
+    <button class="btn btn-primary" onclick="closePopup()">Enter Site</button>
   </div>
+</div>
 
-  <main>
-    <h2>Find Local Clinics</h2>
-    <input type="text" id="search" placeholder="Enter your city or town...">
-    <div class="results" id="results">
-      Start typing to see resources...
+<!-- Topbar -->
+<div class="topbar">
+  <div class="logo">✦</div>
+  <div>Adzentura</div>
+  <button class="btn btn-primary" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+</div>
+
+<div class="container">
+  <div>
+    <!-- Disorders Section -->
+    <div class="card">
+      <h2>Disorders Sections</h2>
+      <div class="section-buttons">
+        <button class="section-btn" data-section="Mood Disorders">Mood Disorders</button>
+        <button class="section-btn" data-section="Anxiety Disorders">Anxiety Disorders</button>
+        <button class="section-btn" data-section="Psychotic Disorders">Psychotic Disorders</button>
+        <button class="section-btn" data-section="Neurodevelopmental Disorders">Neurodevelopmental</button>
+        <button class="section-btn" data-section="Personality Disorders">Personality Disorders</button>
+      </div>
+      <input type="text" id="disorderInput" placeholder="Search disorders in this section">
+      <div id="disorderList"></div>
     </div>
 
-    <div class="resources">
-      <h2>National Resources</h2>
-      <ul>
-        <li><a href="https://findahelpline.com" target="_blank">Find a Helpline</a></li>
-        <li><a href="https://www.nami.org/help" target="_blank">NAMI HelpLine</a></li>
-        <li><a href="https://www.mentalhealth.gov/get-help" target="_blank">MentalHealth.gov</a></li>
+    <!-- Methods Section -->
+    <div class="card">
+      <h2>Methods & Strategies</h2>
+      <p>Practical strategies to improve mental health: mindfulness, journaling, exercise, sleep hygiene, breathing techniques, coping skills, and stress management tips.</p>
+      <div id="methodList"></div>
+    </div>
+
+    <!-- Resources Section -->
+    <div class="card">
+      <h2>Resources</h2>
+      <button class="btn btn-primary" id="toggleResourcesBtn">Show Resources</button>
+      <div id="resourceList" style="display:none;max-height:400px;overflow:auto;margin-top:10px;"></div>
+    </div>
+
+    <!-- Hotlines Section -->
+    <div class="card">
+      <h2>Crisis Hotlines</h2>
+      <ul style="line-height:1.8;">
+        <li><a href="tel:988" target="_blank">988 Suicide & Crisis Lifeline (USA)</a></li>
+        <li><a href="tel:911" target="_blank">Emergency Services (911)</a></li>
+        <li><a href="https://findahelpline.com" target="_blank">International Helplines Directory</a></li>
+        <li><a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank">SAMHSA Helpline (USA)</a></li>
       </ul>
     </div>
-  </main>
 
-  <script>
-    const clinics = {
-      "new york": ["NYC Well: 1-888-692-9355", "Columbia University Clinic"],
-      "los angeles": ["LA County Mental Health: 1-800-854-7771"],
-      "chicago": ["NAMI Chicago Helpline: 833-626-4244"],
-      "miami": ["Thriving Mind South Florida: 211 or 305-358-HELP"],
-      "tampa": ["Florida’s Premier Mental Health Treatment Center: 866-595-9217"],
-    };
+    <!-- Quiz Section -->
+    <div class="card" id="quizIntroCard">
+      <h2>Take Our Free Mental Health Test</h2>
+      <p>Quickly assess your stress, mood, and anxiety levels. No sign-up required.</p>
+      <button class="btn btn-primary" onclick="showQuiz()">Take the Test</button>
+    </div>
 
-    const searchInput = document.getElementById("search");
-    const resultsDiv = document.getElementById("results");
+    <div class="card" id="quizCard" style="display:none;">
+      <h2>Mental Health Self-Assessment Quiz</h2>
+      <p>Answer all questions to get insights into your mental health.</p>
+      <form id="quizForm">
+        <ol style="line-height:1.8;">
+          <!-- Example Question -->
+          <li>How often have you felt anxious in the past week?<br>
+            <label><input type="radio" name="q1" value="0"> Rarely</label>
+            <label><input type="radio" name="q1" value="1"> Sometimes</label>
+            <label><input type="radio" name="q1" value="2"> Often</label>
+            <label><input type="radio" name="q1" value="3"> Almost always</label>
+          </li>
+          <!-- Add other questions as needed -->
+        </ol>
+        <button type="button" class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
+      </form>
+      <div id="quizResult" style="margin-top:15px; font-weight:600;"></div>
+    </div>
+  </div>
 
-    searchInput.addEventListener("input", () => {
-      const city = searchInput.value.toLowerCase().trim();
-      if (clinics[city]) {
-        resultsDiv.innerHTML = "<ul>" + clinics[city].map(c => `<li>${c}</li>`).join("") + "</ul>";
-      } else {
-        resultsDiv.textContent = "Note- We are currently on our first stages of development, some clinics may take a couple days to be added, Thank you for your patience.";
-      }
+  <!-- Sidebar -->
+  <aside>
+    <!-- Inspirational Quote Card -->
+    <div class="card" style="text-align:center; background:linear-gradient(135deg, #6b63ff, #2aa7c2); color:white;">
+      <h3>💡 Inspiration</h3>
+      <p style="font-size:18px; font-weight:600;">You matter. Your mental health matters. Take care of yourself today.</p>
+    </div>
+
+    <!-- Contact Card -->
+    <div class="card">
+      <h3>Contact</h3>
+      <div>Email: <a href="mailto:adzenturabusiness@gmail.com">adzenturabusiness@gmail.com</a></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+// Pop-up
+function closePopup(){document.getElementById('popup').style.display='none';}
+
+// Dark Mode
+function toggleDarkMode(){document.body.classList.toggle('dark-mode');}
+
+// Fade-in cards
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
+  });
+},{ threshold:0.1 });
+document.querySelectorAll('.card').forEach(card=>observer.observe(card));
+
+// Disorders data
+let disordersBySection={
+"Mood Disorders":[
+{name:"Depression", symptoms:"Persistent sadness, lack of interest, fatigue, sleep changes, appetite changes.", causes:"Genetics, chemical imbalance, traumatic events.", risk:"Family history, chronic stress, trauma.", tips:"CBT, therapy, exercise, structured routines, journaling, mindfulness."},
+{name:"Bipolar Disorder", symptoms:"Extreme mood swings between mania and depression, impulsivity, irritability.", causes:"Genetics, neurotransmitter imbalances.", risk:"Family history, early trauma.", tips:"Medication, therapy, sleep regulation, routines, stress management."}
+],
+"Anxiety Disorders":[
+{name:"Generalized Anxiety Disorder", symptoms:"Excessive worry, tension, restlessness, difficulty concentrating, sleep issues.", causes:"Genetics, stress, brain chemistry.", risk:"High-stress environment, family history.", tips:"CBT, mindfulness, breathing exercises, exercise, journaling."},
+{name:"Panic Disorder", symptoms:"Sudden intense panic attacks, chest pain, shortness of breath.", causes:"Stress, brain chemistry, trauma.", risk:"Family history, high stress.", tips:"Exposure therapy, CBT, relaxation techniques, support groups."}
+],
+"Psychotic Disorders":[
+{name:"Schizophrenia", symptoms:"Hallucinations, delusions, disorganized thinking, social withdrawal.", causes:"Genetics, chemical imbalance, environment.", risk:"Family history, early trauma.", tips:"Medication, therapy, social support, structured routines."}
+],
+"Neurodevelopmental Disorders":[
+{name:"ADHD", symptoms:"Inattention, hyperactivity, impulsivity, poor organization.", causes:"Genetics, prenatal environment.", risk:"Family history, exposure to toxins.", tips:"Medication, behavior therapy, structured routines, exercise, mindfulness."}
+],
+"Personality Disorders":[
+{name:"Borderline Personality Disorder", symptoms:"Emotional instability, impulsivity, unstable relationships.", causes:"Genetics, early trauma.", risk:"History of abuse, family history.", tips:"Dialectical behavior therapy, mindfulness, journaling, emotional regulation."}
+]
+};
+
+// Methods & strategies
+const methods=[
+{name:"Journaling", details:"Write daily thoughts for 5-10 minutes to reduce stress and increase self-awareness."},
+{name:"Meditation", details:"Focus on breath or mantra daily. Reduces anxiety, improves focus and calmness."},
+{name:"Exercise", details:"At least 30 min daily. Boosts mood, energy, and sleep."},
+{name:"Sleep Hygiene", details:"Consistent sleep/wake schedule, reduce screens before bed, improve cognitive function."}
+];
+
+// Resources
+const resources=[
+{name:"National Institute of Mental Health", url:"https://www.nimh.nih.gov"},
+{name:"Mental Health America", url:"https://www.mhanational.org"},
+{name:"WHO Mental Health", url:"https://www.who.int/mental_health"},
+{name:"SAMHSA Helpline", url:"https://www.samhsa.gov/find-help/national-helpline"},
+{name:"988 Suicide & Crisis Lifeline", url:"tel:988"}
+];
+
+// Render methods
+function renderMethods(){
+  const container=document.getElementById('methodList');
+  container.innerHTML='';
+  methods.forEach(m=>{
+    const div=document.createElement('div');
+    div.className='method-card';
+    div.innerHTML=`<h4>${m.name}</h4><p>${m.details}</p>`;
+    container.appendChild(div);
+  });
+}
+
+// Render disorders
+let currentSection="Mood Disorders";
+function renderDisorders(section=currentSection, query=""){
+  const container=document.getElementById('disorderList');
+  container.innerHTML='';
+  const list = disordersBySection[section].filter(d=>d.name.toLowerCase().includes(query.toLowerCase()));
+  list.forEach(d=>{
+    const div=document.createElement('div');
+    div.className='disorder-card';
+    div.innerHTML=`<h4>${d.name}</h4>
+      <div class='disorder-details' style='display:none;'>
+      <p><strong>Symptoms:</strong> ${d.symptoms}</p>
+      <p><strong>Causes:</strong> ${d.causes}</p>
+      <p><strong>Risk Factors:</strong> ${d.risk}</p>
+      <p><strong>Coping & Tips:</strong> ${d.tips}</p>
+      </div>`;
+    div.addEventListener('click',()=>{
+      const details=div.querySelector('.disorder-details');
+      details.style.display=details.style.display==='none'?'block':'none';
     });
-  </script>
+    container.appendChild(div);
+  });
+}
+
+// Section buttons
+document.querySelectorAll('.section-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{currentSection=btn.dataset.section; renderDisorders(currentSection);});
+});
+
+// Search input
+document.getElementById('disorderInput').addEventListener('input',(e)=>{renderDisorders(currentSection,e.target.value);});
+
+// Resources toggle
+document.getElementById('toggleResourcesBtn').addEventListener('click',()=>{
+  const res=document.getElementById('resourceList');
+  if(res.style.display==='none'){
+    res.innerHTML='';
+    resources.forEach(r=>{
+      const div=document.createElement('div');
+      div.style.padding='10px';
+      div.style.borderBottom='1px solid #eef6fb';
+      div.innerHTML=`<a href="${r.url}" target="_blank">${r.name}</a>`;
+      res.appendChild(div);
+    });
+    res.style.display='block';
+  } else res.style.display='none';
+});
+
+// Quiz
+function showQuiz(){
+  document.getElementById('quizIntroCard').style.display='none';
+  document.getElementById('quizCard').style.display='block';
+  window.scrollTo({top:document.getElementById('quizCard').offsetTop-20, behavior:'smooth'});
+}
+function submitQuiz(){
+  let score=0;
+  for(let i=1;i<=10;i++){
+    const q=document.querySelector(`input[name=q${i}]:checked`);
+    if(q) score += parseInt(q.value);
+  }
+  const result=document.getElementById('quizResult');
+  if(score <= 10){
+    result.innerHTML="Your mental health appears stable. Maintain routines, mindfulness, and social support.";
+  } else if(score <= 20){
+    result.innerHTML="Moderate stress or mood changes detected. Consider journaling, meditation, exercise, and therapy.";
+  } else{
+    result.innerHTML="High stress or significant mood changes detected. Strongly consider consulting a mental health professional.";
+  }
+  window.scrollTo({ top: result.offsetTop - 20, behavior: 'smooth' });
+}
+
+// Initial render
+renderMethods();
+renderDisorders();
+</script>
 </body>
 </html>
