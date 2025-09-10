@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adzentura - Free Mental Health Resources</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f9fc;
+      color: #333;
+    }
+    header {
+      background: #4a90e2;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .hotline {
+      background: #ff4b4b;
+      padding: 1rem;
+      text-align: center;
+      color: white;
+      font-weight: bold;
+    }
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .results {
+      background: #fff;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .resources {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Adzentura</h1>
+    <p>Free Mental Health Resources – No Sign Ups, Just Help</p>
+  </header>
+
+  <div class="hotline">
+    Crisis Hotline (US): Dial <strong>988</strong>
+  </div>
+
+  <main>
+    <h2>Find Local Clinics</h2>
+    <input type="text" id="search" placeholder="Enter your city or town...">
+    <div class="results" id="results">
+      Start typing to see resources...
+    </div>
+
+    <div class="resources">
+      <h2>National Resources</h2>
+      <ul>
+        <li><a href="https://findahelpline.com" target="_blank">Find a Helpline</a></li>
+        <li><a href="https://www.nami.org/help" target="_blank">NAMI HelpLine</a></li>
+        <li><a href="https://www.mentalhealth.gov/get-help" target="_blank">MentalHealth.gov</a></li>
+      </ul>
+    </div>
+  </main>
+
+  <script>
+    const clinics = {
+      "new york": ["NYC Well: 1-888-692-9355", "Columbia University Clinic"],
+      "los angeles": ["LA County Mental Health: 1-800-854-7771"],
+      "chicago": ["NAMI Chicago Helpline: 833-626-4244"],
+      "miami": ["Thriving Mind South Florida: 211 or 305-358-HELP"]
+    };
+
+    const searchInput = document.getElementById("search");
+    const resultsDiv = document.getElementById("results");
+
+    searchInput.addEventListener("input", () => {
+      const city = searchInput.value.toLowerCase().trim();
+      if (clinics[city]) {
+        resultsDiv.innerHTML = "<ul>" + clinics[city].map(c => `<li>${c}</li>`).join("") + "</ul>";
+      } else {
+        resultsDiv.textContent = "No clinics found. Try another city.";
+      }
+    });
+  </script>
+</body>
+</html>
