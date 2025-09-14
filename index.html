@@ -1,423 +1,967 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adzentura — Mental Health Hub</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --primary:#6b63ff;
-  --accent:#2aa7c2;
-  --success:#10b981;
-  --bg-light:#f9fafb;
-  --bg-dark:#111827;
-  --text-light:#111827;
-  --text-dark:#f3f4f6;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Adzentura — Mental Health Hub</title>
+  <meta name="description" content="Adzentura — an evidence-informed mental health hub designed for students and educators. Resources, coping strategies, self-assessment, and crisis help."/>
+  <style>
+    /* ===========================
+       ADZENTURA — FULL STYLESHEET
+       No frameworks, pure CSS
+       =========================== */
 
-  --tower1-light:#6b63ff;
-  --tower2-light:#2aa7c2;
-  --tower1-dark:#8b82ff;
-  --tower2-dark:#4ad3e3;
-}
+    :root{
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --muted: #6b7280;
+      --text: #0b1220;
+      --accent-1: #6b63ff;
+      --accent-2: #2aa7c2;
+      --danger: #cc1f2b;
+      --success: #10b981;
+      --card-shadow: 0 12px 30px rgba(8,12,20,0.06);
+      --glass: rgba(255,255,255,0.65);
+      --focus: 3px solid rgba(107,99,255,0.22);
+      --maxWidth: 1200px;
+      --radius: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", monospace;
+    }
 
-body{
-  margin:0;
-  font-family:Inter,sans-serif;
-  background:var(--bg-light);
-  color:var(--text-light);
-  transition: all 0.3s ease;
-}
-body.dark-mode{
-  background:var(--bg-dark);
-  color:var(--text-dark);
-}
+    /* DARK THEME VARIABLES */
+    .dark {
+      --bg: #07080a;
+      --surface: #0f1720;
+      --muted: #9aa4b2;
+      --text: #e7eef7;
+      --accent-1: #8b84ff;
+      --accent-2: #48c7d1;
+      --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      --glass: rgba(10,14,20,0.55);
+      --focus: 3px solid rgba(139,132,255,0.12);
+    }
 
-a{color:var(--primary); text-decoration:none;}
-a:hover{text-decoration:underline;}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,var(--bg),#eef3f8 800px);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      transition: background .35s ease, color .35s ease;
+    }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:20px 40px;
-  background:linear-gradient(90deg,var(--primary),var(--accent));
-  color:white;
-  box-shadow:0 4px 15px rgba(0,0,0,0.1);
-}
+    /* Utility containers */
+    .container{max-width:var(--maxWidth);margin:0 auto;padding:0 20px}
+    header{position:sticky;top:0;z-index:60;background:var(--glass);backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(6,10,25,0.04)}
+    .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px}
+    .brand .title{font-weight:700;font-size:18px}
+    nav .links{display:flex;gap:18px;align-items:center}
+    nav a{color:var(--text);text-decoration:none;font-weight:600;font-size:14px;opacity:.95}
+    nav a:hover{text-decoration:none;opacity:1}
+    .navActions{display:flex;gap:8px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;border-radius:10px;padding:9px 14px;border:0;cursor:pointer;font-weight:700;transition:transform .12s ease, box-shadow .12s ease}
+    .btn:focus{outline:none;box-shadow:var(--focus)}
+    .btn-primary{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:white}
+    .btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text);padding:8px 12px}
+    .btn-danger{background:var(--danger);color:white}
 
-.logo{
-  width:50px;
-  height:50px;
-  background:white;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:24px;
-  color:var(--primary);
-}
+    /* Layout sections */
+    main{padding:28px 0 80px}
+    .hero{display:grid;grid-template-columns:2fr 1fr;gap:22px;align-items:start;margin-top:20px}
+    @media(max-width:900px){.hero{grid-template-columns:1fr}}
 
-.container{
-  max-width:1400px;
-  margin:20px auto;
-  padding:0 30px;
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:25px;
-}
+    .card{
+      background:var(--surface);
+      border-radius:var(--radius);
+      box-shadow:var(--card-shadow);
+      padding:20px;
+      transition:transform .15s ease, box-shadow .15s ease, background .2s;
+    }
+    .card:hover{transform:translateY(-6px)}
+    .card .small{font-size:13px;color:var(--muted);margin-top:8px}
 
-.card{
-  background:white;
-  border-radius:16px;
-  padding:25px;
-  box-shadow:0 8px 25px rgba(12,24,40,0.08);
-  transition: all 0.3s ease;
-  opacity:0;
-  transform: translateY(20px);
-}
-body.dark-mode .card{
-  background:#1f2937;
-  color:var(--text-dark);
-}
-.card.visible{
-  opacity:1;
-  transform: translateY(0);
-}
-.card:hover{
-  transform: translateY(-5px) scale(1.02);
-  box-shadow:0 15px 40px rgba(12,24,40,0.2);
-}
+    /* HELP TOPBAR (urgent) */
+    #helpTop{
+      border-radius:12px;padding:18px;display:flex;gap:18px;align-items:flex-start;justify-content:space-between;
+      background:linear-gradient(90deg, rgba(255,255,255,1), rgba(247,252,255,0.9));
+      box-shadow:0 8px 30px rgba(6,10,25,0.04);
+    }
+    .help-left{flex:1}
+    .help-right{min-width:260px;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+    .hotlines{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px}
+    .hotline{background:linear-gradient(180deg,#fff,#f6fbff);padding:12px;border-radius:10px;border:1px solid rgba(6,10,25,0.03)}
+    .hotline strong{display:block;font-size:18px;color:var(--text)}
+    .urgent{display:inline-block;background:var(--danger);color:white;padding:10px 14px;border-radius:10px;font-weight:800;text-decoration:none}
 
-.btn{
-  padding:10px 16px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-  margin-top:10px;
-}
+    /* Calm mode styling */
+    .calm-mode body, .calm-mode .card { /* fallback - JS adds class on body itself */ }
+    .breathing {
+      width:92px;height:92px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg, rgba(107,99,255,0.12), rgba(42,167,194,0.12));
+      border:1px solid rgba(107,99,255,0.12);
+      box-shadow:0 8px 30px rgba(42,167,194,0.06);
+      position:relative;overflow:hidden;
+    }
 
-.btn-primary{
-  background:var(--primary);
-  color:white;
-  transition: all 0.2s ease;
-}
-.btn-primary:hover{
-  transform:scale(1.05);
-  box-shadow:0 5px 15px rgba(12,24,40,0.3);
-}
+    .breathe-circle {
+      width:36px;height:36px;border-radius:999px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));opacity:0.95;
+      animation: breathe 4000ms ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%{transform:scale(.6);opacity:.9}
+      50%{transform:scale(1.35);opacity:1}
+      100%{transform:scale(.6);opacity:.9}
+    }
 
-.section-btn{
-  margin:5px;
-  padding:10px 14px;
-  border-radius:8px;
-  border:1px solid var(--primary);
-  background:white;
-  cursor:pointer;
-  font-weight:600;
-  transition: all 0.3s ease;
-}
-.section-btn:hover{
-  transform:scale(1.05);
-  background:var(--primary);
-  color:white;
-}
+    /* Section headings */
+    .sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .sectionTitle h2{font-size:20px;margin:0}
+    .muted{color:var(--muted);font-size:13px}
 
-#disorderInput{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  margin-bottom:15px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  transition: all 0.3s ease;
-}
-#disorderInput:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 8px rgba(107,99,255,0.3);
-  outline:none;
-}
+    /* Grid lists */
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    @media(max-width:980px){.grid-3,.grid-2{grid-template-columns:1fr}}
 
-aside .card{margin-bottom:20px;}
+    /* Disorder cards */
+    .disorder { cursor:pointer; padding:14px; border-radius:12px; background:linear-gradient(180deg,#fff,#fafcff); border:1px solid rgba(6,10,25,0.03) }
+    .disorder h3{margin:0;font-size:16px}
+    .disorder .excerpt{font-size:13px;color:var(--muted);margin-top:8px}
+    .disorder .details{display:none;margin-top:12px;border-top:1px dashed rgba(6,10,25,0.04);padding-top:12px}
+    .disorder .tag{display:inline-block;font-size:12px;padding:4px 8px;border-radius:999px;background:rgba(6,10,25,0.04);color:var(--muted);margin-right:8px}
 
-@media(max-width:1024px){
-  .container{grid-template-columns:1fr;}
-}
+    /* Method cards - accordion style */
+    .method { padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#f9fbff);border:1px solid rgba(6,10,25,0.03) }
+    .method .meta{font-size:13px;color:var(--muted)}
+    .method .how{display:none;margin-top:12px}
 
-body.dark-mode a{color:var(--accent);}
-</style>
+    /* Resources cards */
+    .resource { padding:14px;border-radius:12px;background:linear-gradient(180deg,#fff,#f9fbff);border:1px solid rgba(6,10,25,0.03) }
+    .resource .title{font-weight:700}
+    .resource .desc{font-size:13px;color:var(--muted);margin-top:8px}
+    .resource a{display:inline-block;margin-top:10px;color:var(--accent-1);font-weight:700}
+
+    /* Quotes box */
+    .quoteBox{padding:18px;border-radius:12px;background:linear-gradient(90deg, rgba(107,99,255,0.08), rgba(42,167,194,0.05));text-align:center}
+    .quoteBox p{font-size:18px;font-style:italic;margin:0}
+
+    /* Quiz styles */
+    .quiz { padding:16px;border-radius:12px;background:linear-gradient(180deg,#fff,#f7fbff);border:1px solid rgba(6,10,25,0.03) }
+    .question{margin-bottom:12px}
+    .options{display:flex;gap:8px;flex-wrap:wrap}
+    .option{padding:8px 12px;border-radius:8px;border:1px solid rgba(6,10,25,0.06);cursor:pointer}
+    .option.selected{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:white;border-color:transparent}
+    .quizResult{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#eef6ff,#fff);border:1px solid rgba(6,10,25,0.03)}
+
+    /* Mood tracker */
+    .moodRow{display:flex;gap:12px;align-items:center}
+    .moodButton{font-size:22px;padding:8px;border-radius:10px;border:1px solid rgba(6,10,25,0.04);background:transparent;cursor:pointer}
+    .moodLog{font-size:14px;color:var(--muted);margin-top:10px}
+
+    /* Footer */
+    footer{padding:22px 0;text-align:center;color:var(--muted);font-size:14px}
+
+    /* Focus styles */
+    :focus{outline:none;box-shadow:var(--focus);border-radius:8px}
+
+    /* small screens */
+    @media(max-width:720px){
+      nav .links{display:none}
+      .hero{grid-template-columns:1fr}
+      section{padding:28px 6%}
+      .help-right{align-items:flex-start}
+    }
+
+  </style>
 </head>
 <body>
-
-<!-- Welcome Pop-up -->
-<div id="popup" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:100;">
-  <div style="background:white;padding:30px;border-radius:16px;max-width:450px;text-align:center;">
-    <h2>Welcome to Adzentura</h2>
-    <p>This website is completely free, requires no sign-up, and provides mental health information, resources, and a free self-assessment quiz.</p>
-    <button class="btn btn-primary" onclick="closePopup()">Enter Site</button>
-  </div>
-</div>
-
-<!-- Topbar -->
-<div class="topbar">
-  <div class="logo">✦</div>
-  <div>Adzentura</div>
-  <button class="btn btn-primary" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-</div>
-
-<div class="container">
-  <div>
-    <!-- Disorders Section -->
-    <div class="card">
-      <h2>Disorders Sections</h2>
-      <div class="section-buttons">
-        <button class="section-btn" data-section="Mood Disorders">Mood Disorders</button>
-        <button class="section-btn" data-section="Anxiety Disorders">Anxiety Disorders</button>
-        <button class="section-btn" data-section="Psychotic Disorders">Psychotic Disorders</button>
-        <button class="section-btn" data-section="Neurodevelopmental Disorders">Neurodevelopmental</button>
-        <button class="section-btn" data-section="Personality Disorders">Personality Disorders</button>
-      </div>
-      <input type="text" id="disorderInput" placeholder="Search disorders in this section">
-      <div id="disorderList"></div>
-    </div>
-
-    <!-- Methods Section -->
-    <div class="card">
-      <h2>Methods & Strategies</h2>
-      <p>Practical strategies to improve mental health: mindfulness, journaling, exercise, sleep hygiene, breathing techniques, coping skills, and stress management tips.</p>
-      <div id="methodList"></div>
-    </div>
-
-    <!-- Resources Section -->
-    <div class="card">
-      <h2>Resources</h2>
-      <button class="btn btn-primary" id="toggleResourcesBtn">Show Resources</button>
-      <div id="resourceList" style="display:none;max-height:400px;overflow:auto;margin-top:10px;"></div>
-    </div>
-
-    <!-- Hotlines Section -->
-    <div class="card">
-      <h2>Crisis Hotlines</h2>
-      <ul style="line-height:1.8;">
-        <li><a href="tel:988" target="_blank">988 Suicide & Crisis Lifeline (USA)</a></li>
-        <li><a href="tel:911" target="_blank">Emergency Services (911)</a></li>
-        <li><a href="https://findahelpline.com" target="_blank">International Helplines Directory</a></li>
-        <li><a href="https://www.samhsa.gov/find-help/national-helpline" target="_blank">SAMHSA Helpline (USA)</a></li>
-      </ul>
-    </div>
-
-    <!-- Quiz Section -->
-    <div class="card" id="quizIntroCard">
-      <h2>Take Our Free Mental Health Test</h2>
-      <p>Quickly assess your stress, mood, and anxiety levels. No sign-up required.</p>
-      <button class="btn btn-primary" onclick="showQuiz()">Take the Test</button>
-    </div>
-
-    <div class="card" id="quizCard" style="display:none;">
-      <h2>Mental Health Self-Assessment Quiz</h2>
-      <p>Answer all questions to get insights into your mental health.</p>
-      <form id="quizForm">
-        <ol style="line-height:1.8;">
-          <li>How often have you felt anxious in the past week?<br>
-            <label><input type="radio" name="q1" value="0"> Rarely</label>
-            <label><input type="radio" name="q1" value="1"> Sometimes</label>
-            <label><input type="radio" name="q1" value="2"> Often</label>
-            <label><input type="radio" name="q1" value="3"> Almost always</label>
-          </li>
-          <!-- Add other questions here -->
-        </ol>
-        <button type="button" class="btn btn-primary" onclick="submitQuiz()">Submit Quiz</button>
-      </form>
-      <div id="quizResult" style="margin-top:15px; font-weight:600;"></div>
-    </div>
-  </div>
-
-  <!-- Sidebar -->
-  <aside>
-    <!-- Inspirational Quote Card -->
-    <div class="card" style="text-align:center; background:linear-gradient(135deg, #6b63ff, #2aa7c2); color:white;">
-      <h3>💡 Inspiration</h3>
-      <p style="font-size:18px; font-weight:600;">You matter. Your mental health matters. Take care of yourself today.</p>
-    </div>
-
-    <!-- 9/11 Remembrance Section -->
-    <div class="card" style="text-align:center;">
-      <h2>9/11 Remembrance</h2>
-      <p>On September 11, 2001, nearly 3,000 lives were lost in coordinated attacks on the U.S. We honor their memory and the bravery of first responders.</p>
-      
-      <!-- Twin Towers Tribute -->
-      <div id="twinTowers" style="display:flex;justify-content:center;align-items:flex-end;gap:20px;margin:20px 0;">
-        <div id="tower1" style="width:30px;height:100px;border-radius:4px;box-shadow:0 5px 12px rgba(0,0,0,0.3);"></div>
-        <div id="tower2" style="width:30px;height:100px;border-radius:4px;box-shadow:0 5px 12px rgba(0,0,0,0.3);"></div>
+  <!-- HEADER / NAV -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">✦</div>
+        <div>
+          <div class="title">Adzentura</div>
+          <div class="muted" style="font-size:12px">Mental Health Hub — Academic & Support</div>
+        </div>
       </div>
 
-      <ul style="text-align:left;max-width:280px;margin:0 auto;line-height:1.6;font-size:14px;">
-        <li><strong>Date:</strong> Sept 11, 2001</li>
-        <li><strong>Lives Lost:</strong> ~3,000</li>
-        <li><strong>Locations:</strong> WTC, Pentagon, Flight 93</li>
-        <li><strong>Legacy:</strong> Honor, resilience, unity</li>
-      </ul>
+      <nav class="links" aria-label="Main navigation">
+        <a href="#help">Help</a>
+        <a href="#disorders">Disorders</a>
+        <a href="#methods">Methods</a>
+        <a href="#resources">Resources</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#checkin">Check-in</a>
+      </nav>
 
-      <p style="margin-top:15px;font-weight:600;">We will never forget 🇺🇸</p>
+      <div class="navActions">
+        <button class="btn btn-ghost" id="toggleCalm" title="Toggle Calm Mode">🕊 Calm</button>
+        <button class="btn btn-ghost" id="toggleDark" title="Toggle Dark Mode">🌙</button>
+      </div>
     </div>
+  </header>
 
-    <!-- Contact Card -->
-    <div class="card">
-      <h3>Contact</h3>
-      <div>Email: <a href="mailto:adzenturabusiness@gmail.com">adzenturabusiness@gmail.com</a></div>
+  <main class="container">
+
+    <!-- HELP FIRST (Top) -->
+    <section id="helpTop" class="card" aria-labelledby="help-heading">
+      <div class="help-left">
+        <h2 id="help-heading">If you need immediate help — start here</h2>
+        <p class="small">If you or someone you know is at immediate risk, please call local emergency services. Below are crisis hotlines and calming tools to use now.</p>
+
+        <div class="hotlines" aria-hidden="false">
+          <div class="hotline" role="region" aria-label="US Hotline">
+            <div class="muted">United States</div>
+            <strong>988</strong>
+            <div class="small">Call or text — Suicide & Crisis Lifeline (24/7)</div>
+          </div>
+
+          <div class="hotline" role="region" aria-label="UK Hotline">
+            <div class="muted">United Kingdom</div>
+            <strong>116 123</strong>
+            <div class="small">Samaritans — free, 24/7</div>
+          </div>
+
+          <div class="hotline" role="region" aria-label="Canada Hotline">
+            <div class="muted">Canada</div>
+            <strong>988</strong>
+            <div class="small">Mental health crisis line</div>
+          </div>
+
+          <div class="hotline" role="region" aria-label="International">
+            <div class="muted">International</div>
+            <strong>Directory</strong>
+            <div class="small"><a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <a class="urgent" href="tel:988">Call 988 (U.S.)</a>
+          <button class="btn btn-primary" id="openCalmNow">Open Calm Tools</button>
+          <button class="btn btn-ghost" id="safetyPlanBtn">Create Quick Safety Plan</button>
+        </div>
+
+        <p class="small" style="margin-top:12px">This site is informational and supportive. It is not a substitute for professional care. If possible, reach out to a trusted person or a licensed clinician as well.</p>
+      </div>
+
+      <div class="help-right">
+        <div style="width:100%;display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+          <div class="card" style="width:100%;text-align:right">
+            <div class="muted">Calm breathing</div>
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:12px;margin-top:8px">
+              <div class="breathing" title="Breathing animation" aria-hidden="true"><div class="breathe-circle"></div></div>
+              <div style="text-align:right">
+                <div style="font-weight:700">Guided breathing</div>
+                <div class="small">Try box breathing: 4s in — 4s hold — 4s out — 4s hold</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="width:100%;text-align:right">
+            <div class="muted">Quick grounding</div>
+            <div style="margin-top:8px" class="small">Use 5-4-3-2-1: name 5 things you see, 4 things you feel, 3 you hear, 2 you smell, 1 you taste.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERO / INTRO -->
+    <section class="card" aria-labelledby="intro-heading">
+      <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1">
+          <h2 id="intro-heading">Adzentura — Support, Resources, and Tools</h2>
+          <p class="small">Designed for students and educators: use this hub for project research, class presentations, or to find immediate coping strategies. Below you'll find detailed disorder summaries, methods, resources for citation, a self-assessment quiz, and daily check-in tools—plus a calm mode if you need a gentler UI.</p>
+        </div>
+        <div style="min-width:220px">
+          <div class="small muted">Developed by</div>
+          <div style="font-weight:800">Dylan Castro</div>
+          <div class="small muted">© <span id="currentYear"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DISORDERS (expanded database) -->
+    <section id="disorders" class="card" aria-labelledby="disorders-heading">
+      <div class="sectionTitle">
+        <h2 id="disorders-heading">Disorders — summaries & clinical notes</h2>
+        <div class="muted">Click any card to reveal full details (symptoms, causes, risks, coping)</div>
+      </div>
+
+      <!-- search/filter -->
+      <div style="margin-bottom:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <input id="disorderSearch" placeholder="Search disorders or symptoms..." style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(6,10,25,0.06)"/>
+        <select id="categoryFilter" style="padding:10px;border-radius:10px;border:1px solid rgba(6,10,25,0.06)">
+          <option value="All">All categories</option>
+          <option value="Mood Disorders">Mood Disorders</option>
+          <option value="Anxiety Disorders">Anxiety Disorders</option>
+          <option value="Psychotic Disorders">Psychotic Disorders</option>
+          <option value="Neurodevelopmental Disorders">Neurodevelopmental Disorders</option>
+          <option value="Personality Disorders">Personality Disorders</option>
+          <option value="Eating & Related">Eating & Related</option>
+        </select>
+        <button class="btn btn-ghost" id="clearFilter">Clear</button>
+      </div>
+
+      <!-- grid -->
+      <div id="disorderGrid" class="grid-3"></div>
+    </section>
+
+    <!-- METHODS & STRATEGIES -->
+    <section id="methods" class="card" aria-labelledby="methods-heading">
+      <div class="sectionTitle">
+        <h2 id="methods-heading">Methods & Strategies (detailed)</h2>
+        <div class="muted">Each method has practical steps, why it works, and suggestions on how to measure it in a project.</div>
+      </div>
+
+      <div id="methodsGrid" class="grid-2"></div>
+    </section>
+
+    <!-- RESOURCES -->
+    <section id="resources" class="card" aria-labelledby="resources-heading">
+      <div class="sectionTitle">
+        <h2 id="resources-heading">Resources & Further Reading</h2>
+        <div class="muted">Authoritative sources for citation in projects (NIMH, WHO, SAMHSA, peer-reviewed repositories)</div>
+      </div>
+
+      <div id="resourceGrid" class="grid-3"></div>
+    </section>
+
+    <!-- QUOTES -->
+    <section class="card" aria-labelledby="quotes-heading">
+      <div class="sectionTitle">
+        <h2 id="quotes-heading">Inspiration & Affirmations</h2>
+        <div class="muted">Rotate for a different supportive message</div>
+      </div>
+      <div class="quoteBox">
+        <p id="quoteText">Loading inspiring message…</p>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" id="prevQuote">◀</button>
+        <button class="btn btn-primary" id="shuffleQuote">Shuffle</button>
+        <button class="btn btn-ghost" id="nextQuote">▶</button>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="quiz" class="card" aria-labelledby="quiz-heading">
+      <div class="sectionTitle">
+        <h2 id="quiz-heading">Self-Assessment Quiz (10 items)</h2>
+        <div class="muted">This is a screening tool for educational purposes only</div>
+      </div>
+
+      <div id="quizArea" class="quiz"></div>
+      <div style="margin-top:12px;display:flex;gap:12px">
+        <button class="btn btn-primary" id="submitQuiz">Submit</button>
+        <button class="btn btn-ghost" id="resetQuiz">Reset</button>
+      </div>
+      <div id="quizResult" class="quizResult" aria-live="polite"></div>
+    </section>
+
+    <!-- MOOD CHECK-IN -->
+    <section id="checkin" class="card" aria-labelledby="checkin-heading">
+      <div class="sectionTitle">
+        <h2 id="checkin-heading">Daily Mood Check-in</h2>
+        <div class="muted">Quick check-in — entries stored locally for your review</div>
+      </div>
+
+      <div class="moodRow" role="group" aria-label="Mood choices">
+        <button class="moodButton" data-mood="😄" title="Happy">😄</button>
+        <button class="moodButton" data-mood="🙂" title="Content">🙂</button>
+        <button class="moodButton" data-mood="😐" title="Neutral">😐</button>
+        <button class="moodButton" data-mood="☹️" title="Sad">☹️</button>
+        <button class="moodButton" data-mood="😭" title="Distressed">😭</button>
+      </div>
+      <div class="moodLog" id="moodLog">No entries yet.</div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div>Adzentura — Developed by Dylan Castro • <span id="footerYear"></span></div>
+      <div class="muted" style="margin-top:6px">This site provides informational resources — not a replacement for professional diagnosis and treatment.</div>
     </div>
-  </aside>
-</div>
+  </footer>
 
-<script>
-// Pop-up
-function closePopup(){document.getElementById('popup').style.display='none';}
+  <!-- =========================
+       JAVASCRIPT: DATA & BEHAVIOR
+       ========================= -->
+  <script>
+    // ===== Utilities =====
+    function $qs(sel, root=document) { return root.querySelector(sel) }
+    function $qa(sel, root=document) { return Array.from(root.querySelectorAll(sel)) }
+    function el(tag, attrs={}, children=[]) {
+      const e = document.createElement(tag)
+      for (const k in attrs) {
+        if (k === 'class') e.className = attrs[k]
+        else if (k === 'text') e.textContent = attrs[k]
+        else e.setAttribute(k, attrs[k])
+      }
+      children.forEach(c => e.appendChild(c))
+      return e
+    }
 
-// Dark Mode
-function toggleDarkMode(){
-  document.body.classList.toggle('dark-mode');
-  updateTowers();
-}
+    // ===== App State =====
+    const state = {
+      quotes: [],
+      qIndex: 0,
+      disorders: {},
+      methods: [],
+      resources: [],
+      quiz: [],
+      moodLog: []
+    }
 
-// Fade-in cards
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
-  });
-},{ threshold:0.1 });
-document.querySelectorAll('.card').forEach(card=>observer.observe(card));
+    // ===== Init Year =====
+    document.getElementById('currentYear').textContent = new Date().getFullYear()
+    document.getElementById('footerYear').textContent = new Date().getFullYear()
 
-// Disorders data
-let disordersBySection={
-"Mood Disorders":[
-{name:"Depression", symptoms:"Persistent sadness, lack of interest, fatigue, sleep changes, appetite changes.", causes:"Genetics, chemical imbalance, traumatic events.", risk:"Family history, chronic stress, trauma.", tips:"CBT, therapy, exercise, structured routines, journaling, mindfulness."},
-{name:"Bipolar Disorder", symptoms:"Extreme mood swings between mania and depression, impulsivity, irritability.", causes:"Genetics, neurotransmitter imbalances.", risk:"Family history, early trauma.", tips:"Medication, therapy, sleep regulation, routines, stress management."}
-],
-"Anxiety Disorders":[
-{name:"Generalized Anxiety Disorder", symptoms:"Excessive worry, tension, restlessness, difficulty concentrating, sleep issues.", causes:"Genetics, stress, brain chemistry.", risk:"High-stress environment, family history.", tips:"CBT, mindfulness, breathing exercises, exercise, journaling."},
-{name:"Panic Disorder", symptoms:"Sudden intense panic attacks, chest pain, shortness of breath.", causes:"Stress, brain chemistry, trauma.", risk:"Family history, high stress.", tips:"Exposure therapy, CBT, relaxation techniques, support groups."}
-],
-"Psychotic Disorders":[
-{name:"Schizophrenia", symptoms:"Hallucinations, delusions, disorganized thinking, social withdrawal.", causes:"Genetics, chemical imbalance, environment.", risk:"Family history, early trauma.", tips:"Medication, therapy, social support, structured routines."}
-],
-"Neurodevelopmental Disorders":[
-{name:"ADHD", symptoms:"Inattention, hyperactivity, impulsivity, poor organization.", causes:"Genetics, prenatal environment.", risk:"Family history, exposure to toxins.", tips:"Medication, behavior therapy, structured routines, exercise, mindfulness."}
-],
-"Personality Disorders":[
-{name:"Borderline Personality Disorder", symptoms:"Emotional instability, impulsivity, unstable relationships.", causes:"Genetics, early trauma.", risk:"History of abuse, family history.", tips:"Dialectical behavior therapy, mindfulness, journaling, emotional regulation."}
-]
-};
+    // ===== Data: Quotes (30+) =====
+    state.quotes = [
+      "You are allowed to feel imperfect — growth is not a straight line.",
+      "Small consistent steps are more powerful than sporadic huge efforts.",
+      "Healing isn't linear. Be gentle with your progress.",
+      "It's okay to ask for help — that is courage, not weakness.",
+      "Rest is not a reward. It's essential for functioning.",
+      "You don't have to control your thoughts, only your responses.",
+      "This moment is not your whole story.",
+      "Your pace is the right pace for you.",
+      "You are not defined by your struggles.",
+      "A single step forward is still forward.",
+      "Self-care is an act of strength.",
+      "It's okay to say 'not today' to extra responsibilities.",
+      "Feelings are visitors; they will pass.",
+      "You are more resilient than you know.",
+      "Breathe. Notice. Choose one kind thing for yourself.",
+      "When things feel heavy, reach out to another human.",
+      "Progress over perfection.",
+      "Quiet persistence outperforms loud perfection.",
+      "You have survived 100% of your worst days. You can survive this too.",
+      "There is no timeline on healing.",
+      "Let small routines build a big foundation.",
+      "Name one good thing today and let it grow.",
+      "You deserve to be treated with care — including by yourself.",
+      "Allow rest without guilt.",
+      "Seek connection — people help people.",
+      "Awareness is the first step toward change.",
+      "Notice what you can control — let go of the rest.",
+      "Strength shows in vulnerability, in asking for help.",
+      "One breath can change your nervous system."
+    ]
 
-// Methods
-const methods=[
-{name:"Journaling", details:"Write daily thoughts for 5-10 minutes to reduce stress and increase self-awareness."},
-{name:"Meditation", details:"Focus on breath or mantra daily. Reduces anxiety, improves focus and calmness."},
-{name:"Exercise", details:"At least 30 min daily. Boosts mood, energy, and sleep."},
-{name:"Sleep Hygiene", details:"Consistent sleep/wake schedule, reduce screens before bed, improve cognitive function."}
-];
+    // ===== Data: Disorders (expanded) =====
+    // Each disorder: {category, name, symptoms, causes, risk, tips, resources}
+    const disordersData = [
+      // Mood Disorders
+      {category:"Mood Disorders", name:"Major Depressive Disorder (MDD)", symptoms:"Persistent low mood, anhedonia (loss of interest), appetite/sleep changes, fatigue, feelings of worthlessness, difficulty concentrating, suicidal thoughts.", causes:"Genetics, neurotransmitter imbalances, chronic stress, medical illness.", risk:"Family history, prior depressive episodes, substance use, chronic illness.", tips:"Seek evaluation; evidence-based treatments include psychotherapy (CBT, IPT), medication (SSRIs/SNRIs), behavioral activation, and safety planning.", resources:["https://www.nimh.nih.gov/health/topics/depression"]},
+      {category:"Mood Disorders", name:"Persistent Depressive Disorder (Dysthymia)", symptoms:"Chronic low-level depressive symptoms lasting 2+ years, lower intensity than MDD but longer duration.", causes:"Temperament, long-term stressors, genetic vulnerability.", risk:"Early adversity, low social support.", tips:"Long-term psychotherapy, lifestyle changes, routine and activity scheduling."},
+      {category:"Mood Disorders", name:"Bipolar Disorder (I & II)", symptoms:"Episodes of mania/hypomania (elevated mood, decreased need for sleep) alternating with depression.", causes:"Strong genetic component; neurobiological mood regulation differences.", risk:"Family history, early onset, substance misuse.", tips:"Mood stabilizers (e.g., lithium), psychotherapy, consistent sleep/wake schedules, medication adherence."},
+      {category:"Mood Disorders", name:"Seasonal Affective Disorder (SAD)", symptoms:"Depressive episodes with seasonal pattern (usually winter), low energy, hypersomnia, carbohydrate cravings.", causes:"Reduced daylight affecting circadian rhythms and neurotransmitters.", risk:"Higher latitudes, personal/family history.", tips:"Light therapy, CBT for SAD, structured activity, vitamin D if deficient."},
+      {category:"Mood Disorders", name:"Premenstrual Dysphoric Disorder (PMDD)", symptoms:"Severe cyclical mood and physical symptoms tied to the menstrual cycle causing impairment.", causes:"Hormonal sensitivity interacting with neurotransmitters.", risk:"Prior mood disorders, notable cyclical changes.", tips:"Track cycles, consider SSRIs (luteal-phase dosing), lifestyle supports, gynecologic consultation."},
 
-// Resources
-const resources=[
-{name:"National Institute of Mental Health", url:"https://www.nimh.nih.gov"},
-{name:"Mental Health America", url:"https://www.mhanational.org"},
-{name:"WHO Mental Health", url:"https://www.who.int/mental_health"},
-{name:"SAMHSA Helpline", url:"https://www.samhsa.gov/find-help/national-helpline"},
-{name:"988 Suicide & Crisis Lifeline", url:"tel:988"}
-];
+      // Anxiety Disorders
+      {category:"Anxiety Disorders", name:"Generalized Anxiety Disorder (GAD)", symptoms:"Excessive, hard-to-control worry across areas, muscle tension, restlessness, poor concentration, sleep issues.", causes:"Biological predisposition, hypervigilance, learned worry behaviors.", risk:"High stress, family history, comorbid depression.", tips:"CBT focused on worry exposure and cognitive restructuring, SSRIs/SNRIs, mindfulness, relaxation training."},
+      {category:"Anxiety Disorders", name:"Panic Disorder", symptoms:"Recurrent unexpected panic attacks with intense physical symptoms and worry about future attacks.", causes:"Sensitivity to bodily sensations, conditioning.", risk:"Other anxiety disorders, substance use.", tips:"Interoceptive exposure, breathing/grounding, psychoeducation, short-term medication if needed."},
+      {category:"Anxiety Disorders", name:"Social Anxiety Disorder", symptoms:"Marked fear of social or performance situations, avoidance or distress, affects functioning.", causes:"Genetic and learning components, early negative social experiences.", risk:"Early social trauma, family history.", tips:"CBT with exposure and social skills training, possible SSRIs, rehearsal techniques."},
+      {category:"Anxiety Disorders", name:"Obsessive-Compulsive Disorder (OCD)", symptoms:"Obsessions (intrusive thoughts) and compulsions (repetitive behaviors) aimed at reducing distress.", causes:"Neurocircuity differences, conditioning of rituals.", risk:"Family history, reinforcement of rituals.", tips:"ERP (exposure & response prevention), SSRIs at therapeutic doses, structured habit reversal."},
+      {category:"Anxiety Disorders", name:"Post-Traumatic Stress Disorder (PTSD)", symptoms:"Intrusive memories, nightmares, avoidance, hypervigilance after a traumatic event.", causes:"Severe trauma and altered threat-processing.", risk:"Severity of trauma, previous mental health issues, lack of support.", tips:"Trauma-focused therapies (CPT, PE), EMDR in some settings, stabilization and safety first."},
 
-// Render methods
-function renderMethods(){
-  const container=document.getElementById('methodList');
-  container.innerHTML='';
-  methods.forEach(m=>{
-    const div=document.createElement('div');
-    div.className='method-card';
-    div.innerHTML=`<h4>${m.name}</h4><p>${m.details}</p>`;
-    container.appendChild(div);
-  });
-}
+      // Psychotic Disorders
+      {category:"Psychotic Disorders", name:"Schizophrenia", symptoms:"Positive symptoms (hallucinations, delusions), negative symptoms (flat affect), disorganized thinking and behavior.", causes:"Genetic vulnerability, neurodevelopmental changes, environment.", risk:"Family history, adolescent cannabis use, urbanicity.", tips:"Antipsychotic medication, psychosocial rehabilitation, supported housing and employment, family psychoeducation."},
+      {category:"Psychotic Disorders", name:"Schizoaffective Disorder", symptoms:"Concurrent mood disorder symptoms with psychotic features; diagnosis requires criteria for both.", causes:"Overlap of mood and psychotic disorder mechanisms.", risk:"Family history", tips:"Combined treatment with mood stabilizers and antipsychotics; therapy."},
+      {category:"Psychotic Disorders", name:"Brief Psychotic Disorder", symptoms:"Acute psychosis under one month, often stress-related.", causes:"Acute stressors, sometimes substance-induced.", tips:"Crisis stabilization, short-term antipsychotics, close follow-up."},
+      {category:"Psychotic Disorders", name:"Substance/Medication-Induced Psychotic Disorder", symptoms:"Psychosis temporally related to intoxication or withdrawal.", causes:"Stimulants, hallucinogens, severe alcohol withdrawal, certain meds.", tips:"Address substance use, medical stabilization, psychiatric care."},
 
-// Render disorders
-let currentSection="Mood Disorders";
-function renderDisorders(section=currentSection, query=""){
-  const container=document.getElementById('disorderList');
-  container.innerHTML='';
-  const list = disordersBySection[section].filter(d=>d.name.toLowerCase().includes(query.toLowerCase()));
-  list.forEach(d=>{
-    const div=document.createElement('div');
-    div.className='disorder-card';
-    div.innerHTML=`<h4>${d.name}</h4>
-      <div class='disorder-details' style='display:none;'>
-      <p><strong>Symptoms:</strong> ${d.symptoms}</p>
-      <p><strong>Causes:</strong> ${d.causes}</p>
-      <p><strong>Risk Factors:</strong> ${d.risk}</p>
-      <p><strong>Coping & Tips:</strong> ${d.tips}</p>
-      </div>`;
-    div.addEventListener('click',()=>{
-      const details=div.querySelector('.disorder-details');
-      details.style.display=details.style.display==='none'?'block':'none';
-    });
-    container.appendChild(div);
-  });
-}
+      // Neurodevelopmental
+      {category:"Neurodevelopmental Disorders", name:"ADHD (Attention-Deficit/Hyperactivity Disorder)", symptoms:"Inattention, hyperactivity, impulsivity across settings beginning in childhood.", causes:"Heritable neurodevelopmental differences.", risk:"Family history, prenatal exposures.", tips:"Behavioral therapy, school accommodations, stimulant/non-stimulant meds where appropriate."},
+      {category:"Neurodevelopmental Disorders", name:"Autism Spectrum Disorder (ASD)", symptoms:"Differences in social communication, restricted/repetitive behaviors, sensory differences.", causes:"Complex genetic and early developmental factors.", risk:"Family history, certain genetic conditions.", tips:"Early intervention, behavioral approaches, education supports, sensory accommodations."},
+      {category:"Neurodevelopmental Disorders", name:"Specific Learning Disorders", symptoms:"Difficulties in reading/writing/math despite typical intelligence.", causes:"Neurodevelopmental processing differences.", tips:"Targeted academic interventions, accommodations, assistive technology."},
+      {category:"Neurodevelopmental Disorders", name:"Intellectual Disability", symptoms:"Limitations in intellectual functioning & adaptive behavior starting in childhood.", causes:"Genetic syndromes, prenatal/perinatal conditions.", tips:"Individualized supports, multidisciplinary care, focus on adaptive skills."},
 
-// Section buttons
-document.querySelectorAll('.section-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{currentSection=btn.dataset.section; renderDisorders(currentSection);});
-});
+      // Personality Disorders
+      {category:"Personality Disorders", name:"Borderline Personality Disorder (BPD)", symptoms:"Instability in emotions, relationships, identity; impulsivity; self-harm risk.", causes:"Interaction of temperament and early attachment/trauma.", risk:"History of childhood trauma.", tips:"DBT (Dialectical Behavior Therapy) is evidence-based; focus on emotion regulation and distress tolerance."},
+      {category:"Personality Disorders", name:"Narcissistic Personality Disorder (NPD)", symptoms:"Grandiosity, need for admiration, low empathy, relationship difficulties.", causes:"Complex interplay of temperament and early relational experiences.", tips:"Psychotherapy focusing on interpersonal functioning; treat comorbid conditions."},
+      {category:"Personality Disorders", name:"Antisocial Personality Disorder (ASPD)", symptoms:"Pattern of disregard for others, deceitfulness, impulsivity; requires prior conduct disorder.", causes:"Genetic & environmental, early conduct problems.", tips:"Focus on risk management, behavioral interventions, legal/social systems involvement."},
+      {category:"Personality Disorders", name:"Avoidant Personality Disorder", symptoms:"Social inhibition, feelings of inadequacy, hypersensitivity to criticism.", tips:"CBT with graded exposure and social skills training."},
 
-// Search input
-document.getElementById('disorderInput').addEventListener('input',(e)=>{renderDisorders(currentSection,e.target.value);});
+      // Eating & related
+      {category:"Eating & Related", name:"Anorexia Nervosa", symptoms:"Restrictive intake causing low body weight, fear of weight gain, distorted body image.", causes:"Multifactorial: genetic, sociocultural, psychological.", risk:"Adolescent/young adult females commonly, but can affect any gender.", tips:"Medical stabilization, nutritional rehab, evidence-based psychotherapy (family-based for youth)."},
+      {category:"Eating & Related", name:"Bulimia Nervosa", symptoms:"Binge-eating episodes followed by compensatory behaviors (vomiting, laxatives).", tips:"CBT-ED, nutritional rehabilitation, SSRIs in some cases."},
+      {category:"Eating & Related", name:"Binge-Eating Disorder", symptoms:"Recurrent binge episodes without compensatory behavior leading to distress.", tips:"Therapies (CBT, IPT), nutritional counseling."}
+    ];
 
-// Resources toggle
-document.getElementById('toggleResourcesBtn').addEventListener('click',()=>{
-  const res=document.getElementById('resourceList');
-  if(res.style.display==='none'){
-    res.innerHTML='';
-    resources.forEach(r=>{
-      const div=document.createElement('div');
-      div.style.padding='10px';
-      div.style.borderBottom='1px solid #eef6fb';
-      div.innerHTML=`<a href="${r.url}" target="_blank">${r.name}</a>`;
-      res.appendChild(div);
-    });
-    res.style.display='block';
-  } else res.style.display='none';
-});
+    // ===== Methods (15+) with how-to and measurement suggestions =====
+    state.methods = [
+      {
+        name: "Structured Journaling (Mood Tracking)",
+        summary: "Short daily logs to track mood, triggers, sleep, and activity levels.",
+        how: [
+          "Set aside 5–10 minutes daily (morning/evening).",
+          "Record mood on a 0–10 scale, sleep hours, main activities, and one good thing.",
+          "Graph mood vs sleep/exercise across 2–4 weeks to visualize trends."
+        ],
+        measure: "Mean mood score before vs after an intervention; correlation with sleep/exercise."
+      },
+      {
+        name: "Cognitive Restructuring (CBT)",
+        summary: "Identify automatic negative thoughts and test their validity.",
+        how: [
+          "Use a thought record: Situation → Emotion → Automatic thought → Evidence for/against → Balanced thought.",
+          "Practice with 2–3 real situations per week."
+        ],
+        measure: "Frequency of catastrophic thoughts per week; self-rated distress before/after."
+      },
+      {
+        name: "Behavioral Activation",
+        summary: "Schedule activity to increase positive reinforcement and reduce inactivity.",
+        how: [
+          "List pleasant/meaningful activities and assign 10–30 minute slots each day.",
+          "Rate mood pre/post-activity."
+        ],
+        measure: "Number of scheduled activities completed; change in daily mood score."
+      },
+      {
+        name: "Mindfulness Meditation (Breath-focused)",
+        summary: "Nonjudgmental attention to present-moment experience.",
+        how: [
+          "Start with 5–10 minutes guided breathing practice.",
+          "Gradually increase to 20 minutes; use apps or campus resources for guidance."
+        ],
+        measure: "Self-reported rumination scale; sustained attention tasks."
+      },
+      {
+        name: "Progressive Muscle Relaxation (PMR)",
+        summary: "Tense and release muscle groups to decrease somatic tension.",
+        how: [
+          "Lie or sit comfortably; tense each muscle group 5–7 sec, then release for 10–12 sec.",
+          "Practice once daily or during acute stress."
+        ],
+        measure: "Physiological measures (heart rate) or self-reported tension."
+      },
+      {
+        name: "Box Breathing (4-4-4-4)",
+        summary: "Controlled breathing to regulate autonomic arousal.",
+        how: ["Inhale 4s — hold 4s — exhale 4s — hold 4s; repeat 4–6 cycles."],
+        measure: "Self-reported calmness; heart-rate variability if available."
+      },
+      {
+        name: "Grounding (5-4-3-2-1)",
+        summary: "Sensory exercise to anchor attention and reduce dissociation.",
+        how: ["Identify 5 things you see, 4 you feel, 3 you hear, 2 you smell, 1 you taste."],
+        measure: "Percent reduction in acute panic/anxiety ratings after exercise."
+      },
+      {
+        name: "Sleep Hygiene",
+        summary: "Behavioral routines to improve sleep quality.",
+        how: [
+          "Fixed sleep/wake schedule; reduce screens 60 minutes before bed.",
+          "Avoid caffeine after 2pm; optimize bedroom environment (dark, cool)."
+        ],
+        measure: "Sleep diary metrics; subjective sleep quality."
+      },
+      {
+        name: "Exercise Prescription",
+        summary: "Regular aerobic + resistance exercise for mood and cognition.",
+        how: ["Aim for 150 min/week moderate exercise and 2 strength sessions weekly."],
+        measure: "Weekly minutes of activity and change in mood scores."
+      },
+      {
+        name: "Acceptance & Commitment Techniques (ACT)",
+        summary: "Acceptance of internal experience while committing to valued action.",
+        how: ["Use values clarification and small behavioral steps toward values."],
+        measure: "Values-congruent behavior counts; experiential avoidance scales."
+      },
+      {
+        name: "Dialectical Behavior Therapy Skills (DBT)",
+        summary: "Skills for emotion regulation, distress tolerance, interpersonal effectiveness.",
+        how: ["Practice distress tolerance (TIP skills), check emotion labels, use grounding."],
+        measure: "Frequency of crisis episodes; self-harm incident counts (monitor ethically)."
+      },
+      {
+        name: "Psychoeducation",
+        summary: "Learning about the disorder and treatment options to reduce uncertainty.",
+        how: ["Use reputable sources (NIMH, WHO) and structured reading or lectures."],
+        measure: "Knowledge quizzes and reduced catastrophizing."
+      },
+      {
+        name: "Exposure & Response Prevention (ERP)",
+        summary: "Evidence-based therapy for OCD — graded exposure to triggers without ritual response.",
+        how: ["Gradually approach feared stimuli with a plan and therapist support."],
+        measure: "Reduction in ritual frequency and distress ratings."
+      },
+      {
+        name: "Social Support Interventions",
+        summary: "Strengthen social networks and communication skills.",
+        how: ["Schedule regular check-ins, group activities, and practice assertiveness."],
+        measure: "Frequency of social contacts and perceived support scales."
+      },
+      {
+        name: "Nutritional & Lifestyle Changes",
+        summary: "Dietary patterns can influence mood and cognition.",
+        how: ["Regular meals, reduce processed sugar, maintain hydration; consult dietitian if needed."],
+        measure: "Food diaries and subjective energy/mood tracking."
+      }
+    ]
 
-// Quiz
-function showQuiz(){
-  document.getElementById('quizIntroCard').style.display='none';
-  document.getElementById('quizCard').style.display='block';
-  window.scrollTo({top:document.getElementById('quizCard').offsetTop-20, behavior:'smooth'});
-}
-function submitQuiz(){
-  let score=0;
-  for(let i=1;i<=10;i++){
-    const q=document.querySelector(`input[name=q${i}]:checked`);
-    if(q) score += parseInt(q.value);
-  }
-  const result=document.getElementById('quizResult');
-  if(score <= 10){
-    result.innerHTML="Your mental health appears stable. Maintain routines, mindfulness, and social support.";
-  } else if(score <= 20){
-    result.innerHTML="Moderate stress or mood changes detected. Consider journaling, meditation, exercise, and therapy.";
-  } else{
-    result.innerHTML="High stress or significant mood changes detected. Strongly consider consulting a mental health professional.";
-  }
-  window.scrollTo({ top: result.offsetTop - 20, behavior: 'smooth' });
-}
+    // ===== Resources =====
+    state.resources = [
+      {title:"National Institute of Mental Health (NIMH)", url:"https://www.nimh.nih.gov", desc:"Research-based clinical summaries and topic pages for common mental health disorders."},
+      {title:"World Health Organization — Mental Health", url:"https://www.who.int/health-topics/mental-health", desc:"Global guidance, policy, and population-level mental health information."},
+      {title:"SAMHSA (Substance Abuse and Mental Health Services Administration)", url:"https://www.samhsa.gov", desc:"Helplines, provider locators, and guidelines for integrated care."},
+      {title:"Mental Health America", url:"https://www.mhanational.org", desc:"Public education, screening tools, and community resources."},
+      {title:"PubMed Central (open access articles)", url:"https://www.ncbi.nlm.nih.gov/pmc/", desc:"Searchable repository of peer-reviewed biomedical literature."},
+      {title:"Find a Helpline (International)", url:"https://findahelpline.com", desc:"Directory of helplines and crisis numbers by country."}
+    ]
 
-// Twin Towers tribute color update
-function updateTowers(){
-  const dark=document.body.classList.contains('dark-mode');
-  document.getElementById('tower1').style.background=dark?'var(--tower1-dark)':'var(--tower1-light)';
-  document.getElementById('tower2').style.background=dark?'var(--tower2-dark)':'var(--tower2-light)';
-}
-updateTowers();
-</script>
+    // ===== Quiz questions (10) =====
+    state.quiz = [
+      {q:"Over the last 2 weeks, how often have you felt nervous, anxious, or on edge?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"Over the last 2 weeks, how often have you felt little interest or pleasure in doing things?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you had trouble falling or staying asleep, or sleeping too much?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you felt tired or had little energy?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you felt bad about yourself or felt like a failure?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you had trouble concentrating on tasks?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you felt restless or unable to sit still?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you had thoughts that you'd be better off dead or of hurting yourself?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you avoided social situations due to anxiety or fear?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]},
+      {q:"How often have you experienced panic-like symptoms (racing heart, sweating) without medical cause?", choices:["Not at all","Several days","More than half the days","Nearly every day"], vals:[0,1,2,3]}
+    ]
 
+    // ===== MoodLog from localStorage =====
+    const MOOD_KEY = 'adzentura_mood_log_v1'
+    try {
+      const raw = localStorage.getItem(MOOD_KEY)
+      if (raw) state.moodLog = JSON.parse(raw)
+    } catch (e) { state.moodLog = [] }
+
+    // ===== Helper: persist mood =====
+    function persistMood() {
+      try { localStorage.setItem(MOOD_KEY, JSON.stringify(state.moodLog)) } catch(e){}
+    }
+
+    // ===== Render functions =====
+
+    // Render disorders cards grid
+    function renderDisorders(filterText='', category='All') {
+      const grid = $qs('#disorderGrid'); grid.innerHTML = ''
+      const data = disordersData.filter(d => (category==='All' || d.category===category))
+      const text = filterText.trim().toLowerCase()
+      data.forEach((d, idx) => {
+        const lc = (d.name + ' ' + d.symptoms + ' ' + (d.causes||'')).toLowerCase()
+        if (text && !lc.includes(text)) return
+        const wrapper = document.createElement('div'); wrapper.className = 'disorder card'
+        const header = document.createElement('div'); header.style.display='flex'; header.style.justifyContent='space-between'; header.style.alignItems='flex-start'
+        const title = document.createElement('h3'); title.textContent = d.name
+        const catTag = document.createElement('span'); catTag.className='tag'; catTag.textContent = d.category
+        header.appendChild(title); header.appendChild(catTag)
+        const excerpt = document.createElement('div'); excerpt.className='excerpt'; excerpt.textContent = d.symptoms.split('.').slice(0,1).join('.').trim() + '.'
+        const details = document.createElement('div'); details.className='details'
+        details.innerHTML = `<div style="font-weight:700;margin-bottom:8px">Summary</div>
+          <div><strong>Symptoms:</strong> ${d.symptoms}</div>
+          <div style="margin-top:8px"><strong>Causes:</strong> ${d.causes || 'Varied / multifactorial'}</div>
+          <div style="margin-top:8px"><strong>Risk Factors:</strong> ${d.risk || 'See causes & symptoms'}</div>
+          <div style="margin-top:8px"><strong>Coping & Strategies:</strong> ${d.tips || 'Therapy, evidence-based interventions, reach out to provider'}</div>`
+        if (d.resources) {
+          const res = document.createElement('div'); res.style.marginTop='8px'
+          res.innerHTML = '<strong>Sources:</strong> ' + d.resources.map(r=>`<a href="${r}" target="_blank" rel="noopener">${r}</a>`).join(', ')
+          details.appendChild(res)
+        }
+        wrapper.appendChild(header)
+        wrapper.appendChild(excerpt)
+        wrapper.appendChild(details)
+        // toggle
+        wrapper.addEventListener('click', (e) => {
+          // don't toggle if clicking a link
+          if (e.target.tagName.toLowerCase() === 'a') return
+          details.style.display = details.style.display === 'block' ? 'none' : 'block'
+        })
+        grid.appendChild(wrapper)
+      })
+    }
+
+    // Render methods
+    function renderMethods() {
+      const grid = $qs('#methodsGrid'); grid.innerHTML = ''
+      state.methods.forEach((m, idx) => {
+        const card = document.createElement('div'); card.className = 'method card'
+        card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:800">${m.name}</div><div class="meta small">${m.summary}</div></div>
+          <div><button class="btn btn-ghost" data-idx="${idx}">Open</button></div>
+        </div>
+        <div class="how" id="method-how-${idx}" aria-hidden="true"></div>`
+        const howEl = card.querySelector('.how')
+        howEl.innerHTML = `<ul style="margin-top:8px;padding-left:18px">${m.how.map(s=>`<li>${s}</li>`).join('')}</ul>
+        <div style="margin-top:10px" class="muted"><strong>Suggested measure:</strong> ${m.measure}</div>`
+        // open button
+        card.querySelector('button').addEventListener('click', (e) => {
+          const id = e.currentTarget.getAttribute('data-idx')
+          const target = $qs('#method-how-'+id)
+          const isOpen = target.style.display === 'block'
+          target.style.display = isOpen ? 'none' : 'block'
+          e.currentTarget.textContent = isOpen ? 'Open' : 'Close'
+        })
+        grid.appendChild(card)
+      })
+    }
+
+    // Render resources
+    function renderResources() {
+      const grid = $qs('#resourceGrid'); grid.innerHTML = ''
+      state.resources.forEach(r => {
+        const card = document.createElement('div'); card.className='resource card'
+        card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="title">${r.title}</div>
+            <div class="desc">${r.desc}</div>
+            <a href="${r.url}" target="_blank" rel="noopener">Open resource</a>
+          </div>
+        </div>`
+        grid.appendChild(card)
+      })
+    }
+
+    // Render quotes
+    function renderQuote(i=0) {
+      const box = $qs('#quoteText')
+      const q = state.quotes[(i+state.quotes.length) % state.quotes.length]
+      // fade
+      box.style.opacity=0
+      setTimeout(()=>{ box.textContent = q; box.style.opacity=1 }, 250)
+    }
+
+    // Quiz render
+    function renderQuiz() {
+      const area = $qs('#quizArea'); area.innerHTML = ''
+      state.quiz.forEach((qq, idx) => {
+        const qdiv = document.createElement('div'); qdiv.className='question'
+        const qtitle = document.createElement('div'); qtitle.style.fontWeight='700'; qtitle.textContent = `${idx+1}. ${qq.q}`
+        qdiv.appendChild(qtitle)
+        const optWrap = document.createElement('div'); optWrap.className='options'
+        qq.choices.forEach((choice, cidx) => {
+          const btn = document.createElement('button')
+          btn.type='button'
+          btn.className='option'
+          btn.textContent = choice
+          btn.setAttribute('data-q', idx)
+          btn.setAttribute('data-val', qq.vals[cidx])
+          btn.addEventListener('click', (e) => {
+            // deselect siblings
+            const q = e.currentTarget.getAttribute('data-q')
+            $qa(`.option[data-q="${q}"]`).forEach(o=>o.classList.remove('selected'))
+            e.currentTarget.classList.add('selected')
+          })
+          optWrap.appendChild(btn)
+        })
+        qdiv.appendChild(optWrap)
+        area.appendChild(qdiv)
+      })
+    }
+
+    // Quiz submit
+    function evaluateQuiz() {
+      const total = state.quiz.length
+      let score = 0, unanswered=[]
+      for (let i=0;i<total;i++) {
+        const sel = $qa(`.option[data-q="${i}"].selected`)[0]
+        if (!sel) { unanswered.push(i+1); continue }
+        score += parseInt(sel.getAttribute('data-val'),10)
+      }
+      const resultEl = $qs('#quizResult')
+      if (unanswered.length) {
+        resultEl.innerHTML = `<div style="color:#cc1f2b">Please answer all questions. Missing: ${unanswered.join(', ')}</div>`
+        return
+      }
+      // interpretation: 0-10 low; 11-20 moderate; 21-30 high (since max 30)
+      let message = ''
+      if (score <= 10) message = 'Low to mild symptom level — maintain routines and monitor.'
+      else if (score <= 20) message = 'Moderate symptom level — consider trying some methods and consult a counselor if persisting.'
+      else message = 'High symptom burden — please contact a mental health professional or emergency services if at risk.'
+      resultEl.innerHTML = `<div style="font-weight:800">Score: ${score} / ${total*3}</div><div style="margin-top:8px">${message}</div>`
+      if (score > 20) {
+        resultEl.innerHTML += `<div style="margin-top:10px;color:#cc1f2b"><strong>If you are having thoughts of harming yourself or others, seek immediate help (call emergency services or call 988 in the U.S.).</strong></div>`
+      }
+    }
+
+    // Mood tracker render
+    function renderMoodLog(){
+      const el = $qs('#moodLog')
+      if (!state.moodLog.length) { el.textContent = 'No entries yet.'; return }
+      // show last 10 entries with timestamps
+      const lines = state.moodLog.slice(-10).map(e => `${new Date(e.ts).toLocaleString()}: ${e.mood}`)
+      el.innerHTML = lines.join(' • ')
+    }
+
+    // ===== Event wiring & app start =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // populate state from locals
+      state.quotes = state.quotes.concat([]) // ensure defined (we use state.quotes already defined above)
+      // copy shared arrays into state
+      state.quotes = state.quotes.length ? state.quotes : []
+      state.methods = state.methods.length ? state.methods : state.methods // methods are already on state.methods above
+      state.resources = state.resources.length ? state.resources : state.resources
+      // Actually assign methods and resources to our state for render convenience
+      state.methods = state.methods.length ? state.methods : state.methods
+      state.resources = state.resources.length ? state.resources : state.resources
+      // In practice, methods/resources already set earlier
+      // Set state.quotes from top-level quotes array
+      // There may be duplicates; keep them as is
+
+      // set local arrays if empty
+      if (!state.quotes.length) {
+        // fallback
+        state.quotes = [
+          "Take one small step today.",
+          "You are not alone."
+        ]
+      }
+
+      // Setup disorder/product render using disordersData and methods array
+      renderDisorders()
+      renderMethods()
+      renderResources()
+      renderQuote(state.qIndex)
+      renderQuiz()
+      renderMoodLog()
+
+      // Quote controls
+      $qs('#shuffleQuote').addEventListener('click', () => {
+        state.qIndex = Math.floor(Math.random()*state.quotes.length)
+        renderQuote(state.qIndex)
+      })
+      $qs('#prevQuote').addEventListener('click', () => {
+        state.qIndex = (state.qIndex - 1 + state.quotes.length) % state.quotes.length
+        renderQuote(state.qIndex)
+      })
+      $qs('#nextQuote').addEventListener('click', () => {
+        state.qIndex = (state.qIndex + 1) % state.quotes.length
+        renderQuote(state.qIndex)
+      })
+
+      // Quiz controls
+      $qs('#submitQuiz').addEventListener('click', evaluateQuiz)
+      $qs('#resetQuiz').addEventListener('click', () => {
+        $qa('.option').forEach(o=>o.classList.remove('selected'))
+        $qs('#quizResult').innerHTML = ''
+      })
+
+      // Disoder search/filter
+      $qs('#disorderSearch').addEventListener('input', (e)=> {
+        renderDisorders(e.target.value, $qs('#categoryFilter').value)
+      })
+      $qs('#categoryFilter').addEventListener('change', (e)=> {
+        renderDisorders($qs('#disorderSearch').value, e.target.value)
+      })
+      $qs('#clearFilter').addEventListener('click', ()=>{
+        $qs('#disorderSearch').value=''
+        $qs('#categoryFilter').value='All'
+        renderDisorders()
+      })
+
+      // Mood buttons
+      $qa('.moodButton').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const mood = btn.getAttribute('data-mood')
+          state.moodLog.push({mood, ts: Date.now()})
+          persistMood()
+          renderMoodLog()
+          // quick friendly message
+          alert('Logged: ' + mood)
+        })
+      })
+
+      // Toggle dark
+      $qs('#toggleDark').addEventListener('click', ()=> {
+        document.body.classList.toggle('dark')
+        // ensure readability: adjust any necessary inline colors here (we rely on CSS variables)
+      })
+
+      // Toggle calm mode: show breathing and softer palette (we add a class)
+      $qs('#toggleCalm').addEventListener('click', ()=>{
+        document.body.classList.toggle('calm-mode')
+        // when calm mode on, slow down breathing animation and reduce contrast
+        const on = document.body.classList.contains('calm-mode')
+        if (on) {
+          // smooth pastel background
+          document.body.style.background = 'linear-gradient(180deg,#e6f7fb,#f3f9fb)'
+          // emphasize breathing
+          $qs('.breathe-circle').style.animationDuration = '6000ms'
+        } else {
+          document.body.style.background = ''
+          $qs('.breathe-circle').style.animationDuration = '4000ms'
+        }
+      })
+
+      // "Open Calm Tools" button - scroll to top help breathing card
+      $qs('#openCalmNow').addEventListener('click', ()=>{
+        // ensure calm mode enabled
+        if (!document.body.classList.contains('calm-mode')) document.body.classList.add('calm-mode')
+        // scroll to top help section
+        document.querySelector('#helpTop').scrollIntoView({behavior:'smooth', block:'center'})
+      })
+
+      // Safety Plan button - opens a prompt to create quick safety plan and stores to localStorage (simple)
+      $qs('#safetyPlanBtn').addEventListener('click', ()=>{
+        const steps = []
+        steps.push(prompt('Step 1 — Name one person you can call when distressed (phone or name):') || 'No entry')
+        steps.push(prompt('Step 2 — Name one safe place you can go if you feel unsafe:') || 'No entry')
+        steps.push(prompt('Step 3 — List one coping skill you can try right now (breathing, grounding, music):') || 'No entry')
+        // save simple safety plan in localStorage
+        try {
+          localStorage.setItem('adzentura_safety_plan_v1', JSON.stringify({steps, ts:Date.now()}))
+          alert('Quick safety plan saved locally. If you want to review it later, check your browser storage.')
+        } catch(e) {
+          alert('Unable to save safety plan: ' + e.message)
+        }
+      })
+
+      // Accessibility: keyboard focus for options and buttons
+      // Add key handlers: left/right to change quote
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'ArrowLeft') { state.qIndex = (state.qIndex-1+state.quotes.length)%state.quotes.length; renderQuote(state.qIndex) }
+        if (e.key === 'ArrowRight') { state.qIndex = (state.qIndex+1)%state.quotes.length; renderQuote(state.qIndex) }
+      })
+
+    }) // DOMContentLoaded end
+
+    // ===== initial render helpers invoked above use globals; ensure state mappings exist =====
+    // We assigned methods & resources inline above (state.methods is set earlier)
+    // If not already present, set them from the local top-level arrays defined earlier:
+    if (!state.methods || !state.methods.length) {
+      // fallback small set (should not occur)
+      state.methods = [
+        {name:'Journaling', summary:'Daily writing', how:['Write 5 minutes'],'measure':'self-report'}
+      ]
+    }
+    if (!state.resources || !state.resources.length) {
+      state.resources = [
+        {title:'NIMH',url:'https://www.nimh.nih.gov',desc:'National Institute of Mental Health'}
+      ]
+    }
+
+    // Ensure state.quotes exists
+    if (!state.quotes || !state.quotes.length) {
+      state.quotes = ['You are not alone.','One step at a time.']
+    }
+
+    // Bridge: write state.methods/resources from local variables if present above
+    // (In our code, we built methods earlier in state.methods; if not, this ensures fill.)
+    // Note: disordersData used for disorders.
+
+    // Attach renderMethods and renderResources to window so devs can call them
+    window.renderMethods = renderMethods
+    window.renderResources = renderResources
+    window.renderDisorders = renderDisorders
+    window.renderQuiz = renderQuiz
+    window.evaluateQuiz = evaluateQuiz
+    window.trackMood = function(m) { state.moodLog.push({mood:m, ts:Date.now()}); persistMood(); renderMoodLog() }
+
+  </script>
 </body>
 </html>
