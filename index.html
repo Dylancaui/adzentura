@@ -3,397 +3,921 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adzentura - Under Maintenance</title>
+    <title>Adzentura - CONCEPT DEMO | Mental Health Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --secondary: #10b981;
-            --accent: #f59e0b;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --success: #059669;
+            --primary: #2a6b8a;
+            --secondary: #4a9bbd;
+            --accent: #7bb8cc;
+            --dark: #1a4a5c;
+            --light: #f0f7fa;
+            --text: #2c3e50;
+            --text-light: #5d7a8c;
+            --warning: #e67e22;
+            --demo-bg: #fff9e6;
+            --demo-border: #f1d592;
+            --success: #27ae60;
         }
-        
+
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            color: var(--dark);
-            min-height: 100vh;
+            background-color: #f8fbfd;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* Demo Banner - Always Visible */
+        .demo-banner {
+            background: var(--warning);
+            color: white;
+            padding: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .demo-banner i {
+            margin-right: 0.5rem;
+        }
+
+        /* Enhanced Intro Screen */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 70%, var(--accent) 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            line-height: 1.6;
+            z-index: 999;
         }
-        
-        .container {
-            max-width: 900px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            position: relative;
-        }
-        
-        .non-profit-badge {
+
+        .intro-background {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .logo {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-        
-        .logo span {
-            color: var(--accent);
-        }
-        
-        .tagline {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        
-        .main-content {
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .maintenance-icon {
-            font-size: 4.5rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            color: var(--dark);
-            margin-bottom: 15px;
-            font-size: 2.2rem;
-            font-weight: 700;
-        }
-        
-        .status-message {
-            font-size: 1.1rem;
-            color: var(--gray);
-            max-width: 600px;
-            margin-bottom: 30px;
-        }
-        
-        .progress-container {
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
-            margin: 20px 0 30px;
-        }
-        
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-        
-        .progress-bar {
-            height: 10px;
-            background-color: #e2e8f0;
-            border-radius: 10px;
+            height: 100%;
             overflow: hidden;
         }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            width: 72%;
+
+        .floating-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        }
+
+        .logo-main {
+            font-size: 5.5rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: 6px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            position: relative;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-main::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .logo-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-top: 1.5rem;
+        }
+
+        .demo-warning-intro {
+            background: rgba(230, 126, 34, 0.85);
+            color: white;
+            padding: 1.5rem 2rem;
             border-radius: 10px;
-            animation: progress-animation 2.5s ease-in-out infinite alternate;
+            max-width: 600px;
+            margin: 2rem auto;
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 1.5s forwards;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        
-        @keyframes progress-animation {
-            0% { width: 72%; }
-            100% { width: 78%; }
-        }
-        
-        .info-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 100%;
-            margin: 30px 0;
-        }
-        
-        .card {
-            background: var(--light);
-            border-radius: 12px;
-            padding: 25px;
-            text-align: left;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e2e8f0;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.07);
-        }
-        
-        .card i {
-            font-size: 1.8rem;
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .card h3 {
-            color: var(--dark);
-            margin-bottom: 15px;
+
+        .demo-warning-intro h3 {
+            margin-bottom: 0.8rem;
             font-size: 1.3rem;
         }
-        
-        .helplines {
-            margin-top: 10px;
+
+        .loading-container {
+            width: 300px;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 2s forwards;
         }
-        
-        .helplines ul {
-            list-style-type: none;
-        }
-        
-        .helplines li {
-            margin-bottom: 12px;
-            padding-left: 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .helplines li i {
-            color: var(--secondary);
-            font-size: 1rem;
-            margin-top: 4px;
-        }
-        
-        .helplines strong {
-            color: var(--dark);
-        }
-        
-        .footer {
-            background: var(--light);
-            padding: 25px;
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
-            border-top: 1px solid #e2e8f0;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+        }
+
+        .loading-bar {
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 3px;
+            animation: loading 3.5s ease-in-out 2.5s forwards;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            70% { width: 90%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Main Content */
+        #main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 40px;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .developer {
-            font-size: 1.1rem;
-            color: var(--dark);
+
+        .header-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
         }
-        
-        .developer strong {
-            color: var(--primary);
+
+        .demo-badge {
+            background: var(--warning);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+            font-weight: 600;
         }
-        
-        .endorsement {
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav li {
+            margin-left: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
             font-size: 1rem;
-            color: var(--gray);
+            position: relative;
         }
-        
-        .endorsement a {
-            color: var(--primary);
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 74, 92, 0.85), rgba(42, 107, 138, 0.9)), url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .demo-button {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--dark);
+            padding: 1rem 2.5rem;
+            border-radius: 4px;
             text-decoration: none;
             font-weight: 600;
-            transition: color 0.2s;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
         }
-        
-        .endorsement a:hover {
-            color: var(--primary-light);
-            text-decoration: underline;
+
+        .demo-button:hover {
+            background: #8fc8da;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
-        
+
+        /* Demo Notice */
+        .demo-notice {
+            background: var(--demo-bg);
+            border: 1px solid var(--demo-border);
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 1200px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .demo-notice h3 {
+            color: #8d6e10;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .demo-notice p {
+            color: #8d6e10;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .warning-list {
+            text-align: left;
+            max-width: 600px;
+            margin: 1.5rem auto;
+        }
+
+        .warning-list li {
+            margin-bottom: 0.8rem;
+            color: #8d6e10;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #eaeaea;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: "CONCEPT DEMO";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--warning);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Legal Compliance Section */
+        .legal-section {
+            padding: 5rem 2rem;
+            background: var(--light);
+        }
+
+        .legal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+        }
+
+        .legal-card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--warning);
+        }
+
+        .legal-icon {
+            font-size: 2rem;
+            color: var(--warning);
+            margin-bottom: 1.5rem;
+        }
+
+        .legal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .legal-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .compliance-status {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid var(--demo-border);
+        }
+
+        .compliance-status h4 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .compliance-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .compliance-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 4px;
+        }
+
+        .compliance-item i {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .not-implemented {
+            color: #e74c3c;
+        }
+
+        .not-implemented i {
+            color: #e74c3c;
+        }
+
+        /* Crisis Warning */
+        .crisis-warning {
+            background: #ffeaa7;
+            border: 1px solid #fdcb6e;
+            color: #8d6e10;
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .crisis-warning h4 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .crisis-contacts {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .crisis-contact {
+            text-align: center;
+        }
+
+        .crisis-contact .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--warning);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .credits {
+            text-align: center;
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                border-radius: 15px;
+            .header-content {
+                flex-direction: column;
+                text-align: center;
             }
             
-            .header {
-                padding: 25px 20px;
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
-            .logo {
+            nav li {
+                margin: 0.5rem;
+            }
+            
+            .hero h1 {
                 font-size: 2.2rem;
             }
             
-            .main-content {
-                padding: 30px 20px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .info-cards {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header {
-                padding: 20px 15px;
-            }
-            
-            .logo {
-                font-size: 1.8rem;
-            }
-            
-            .main-content {
-                padding: 25px 15px;
-            }
-            
-            h1 {
-                font-size: 1.6rem;
-            }
-            
-            .maintenance-icon {
+            .logo-main {
                 font-size: 3.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .logo-subtitle {
+                font-size: 1rem;
+                letter-spacing: 5px;
+            }
+            
+            .crisis-contacts {
+                flex-direction: column;
+                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="non-profit-badge">
-                <i class="fas fa-hand-holding-heart"></i>
-                Non-Profit Organization
-            </div>
-            <div class="logo">ADZENT<span>URA</span></div>
-            <p class="tagline">Dedicated to creating positive change through community initiatives and support programs</p>
+    <!-- Demo Banner - Always Visible -->
+    <div class="demo-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        CONCEPT DEMONSTRATION ONLY - NOT A REAL MENTAL HEALTH SERVICE
+    </div>
+
+    <!-- Enhanced Intro Screen -->
+    <div id="intro-screen">
+        <div class="intro-background">
+            <div class="floating-shape shape-1"></div>
+            <div class="floating-shape shape-2"></div>
+            <div class="floating-shape shape-3"></div>
         </div>
         
-        <div class="main-content">
-            <div class="maintenance-icon">
-                <i class="fas fa-tools"></i>
-            </div>
-            <h1>Website Under Maintenance</h1>
-            <p class="status-message">We're improving our website to better serve our community. Thank you for your patience as we work to enhance your experience.</p>
-            
-            <div class="progress-container">
-                <div class="progress-label">
-                    <span>Update Progress</span>
-                    <span>72%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress"></div>
-                </div>
-            </div>
-            
-            <div class="info-cards">
-                <div class="card">
-                    <i class="fas fa-heart"></i>
-                    <h3>Suicide Prevention</h3>
-                    <div class="helplines">
-                        <ul>
-                            <li>
-                                <i class="fas fa-phone-alt"></i>
-                                <div>
-                                    <strong>National Suicide Prevention Lifeline</strong><br>
-                                    1-800-273-8255
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-comment-alt"></i>
-                                <div>
-                                    <strong>Crisis Text Line</strong><br>
-                                    Text HOME to 741741
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-rainbow"></i>
-                                <div>
-                                    <strong>The Trevor Project (LGBTQ)</strong><br>
-                                    1-866-488-7386
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Domestic Violence</h3>
-                    <div class="helplines">
-                        <ul>
-                            <li>
-                                <i class="fas fa-phone-alt"></i>
-                                <div>
-                                    <strong>National Domestic Violence Hotline</strong><br>
-                                    1-800-799-7233
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-heartbeat"></i>
-                                <div>
-                                    <strong>Love Is Respect</strong><br>
-                                    1-866-331-9474
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-child"></i>
-                                <div>
-                                    <strong>Childhelp National Child Abuse Hotline</strong><br>
-                                    1-800-4-A-CHILD
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="logo-container">
+            <div class="logo-main">ADZENTURA</div>
+            <div class="logo-subtitle">Mental Health Navigation Concept</div>
         </div>
         
-        <div class="footer">
-            <div class="developer">
-                Developed by <strong>Dylan Castro</strong>
-            </div>
-            <div class="endorsement">
-                Endorsed by <a href="https://jemway.com" target="_blank">Jemway.com</a>
+        <div class="demo-warning-intro">
+            <h3><i class="fas fa-exclamation-circle"></i> CONCEPT DEMONSTRATION</h3>
+            <p>This is a design concept only. Adzentura is not a real mental health service and provides no medical advice or treatment.</p>
+        </div>
+        
+        <div class="loading-container">
+            <div class="loading-text">LOADING CONCEPT DEMONSTRATION</div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
             </div>
         </div>
     </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div>
+                    <a href="#" class="header-logo">ADZENTURA</a>
+                    <span class="demo-badge">CONCEPT DEMO</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Concept Overview</a></li>
+                        <li><a href="#">Demo Features</a></li>
+                        <li><a href="#">Legal Information</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Mental Health Platform Concept</h1>
+                <p>This demonstration showcases a conceptual design for a mental health resource navigation platform. This is not a functioning service.</p>
+                <button class="demo-button">Explore Concept Features</button>
+            </div>
+        </section>
+
+        <!-- Demo Notice -->
+        <section class="demo-notice">
+            <h3><i class="fas fa-exclamation-triangle"></i> CONCEPT DEMONSTRATION - NOT A REAL SERVICE</h3>
+            <p>This website represents a conceptual design demonstration only. Adzentura is not an operating mental health service and does not provide any medical advice, treatment, or emergency services.</p>
+            
+            <div class="warning-list">
+                <li><i class="fas fa-times-circle"></i> No real medical services are provided</li>
+                <li><i class="fas fa-times-circle"></i> All provider information is fictional</li>
+                <li><i class="fas fa-times-circle"></i> No user data is collected or stored</li>
+                <li><i class="fas fa-times-circle"></i> This platform cannot respond to emergencies</li>
+                <li><i class="fas fa-times-circle"></i> No healthcare provider relationships exist</li>
+            </div>
+            
+            <p><strong>This is a portfolio demonstration piece only.</strong></p>
+        </section>
+
+        <!-- Crisis Warning -->
+        <section class="crisis-warning">
+            <h4><i class="fas fa-life-ring"></i> If You Need Mental Health Support</h4>
+            <p>This demonstration cannot provide mental health support. If you are experiencing a mental health crisis or need immediate assistance, please contact these real resources:</p>
+            <div class="crisis-contacts">
+                <div class="crisis-contact">
+                    <div class="number">988</div>
+                    <div>Suicide & Crisis Lifeline</div>
+                </div>
+                <div class="crisis-contact">
+                    <div class="number">911</div>
+                    <div>Emergency Services</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="section-header">
+                <h2>Concept Platform Features</h2>
+                <p>Demonstration of potential features for a mental health resource navigation platform</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search-location"></i>
+                    </div>
+                    <h3>Resource Directory Concept</h3>
+                    <p>Demonstration of how users might search for mental health resources. All provider information shown is fictional.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-medical"></i>
+                    </div>
+                    <h3>Educational Content Demo</h3>
+                    <p>Concept interface for mental health education. No actual medical advice is provided in this demonstration.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Appointment System Mockup</h3>
+                    <p>Interface demonstration for appointment scheduling. No real appointments can be made through this demo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal Compliance Section -->
+        <section class="legal-section">
+            <div class="section-header">
+                <h2>Legal Information & Disclaimers</h2>
+                <p>Important information about this conceptual demonstration</p>
+            </div>
+            
+            <div class="legal-grid">
+                <div class="legal-card">
+                    <div class="legal-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Medical Services Disclaimer</h3>
+                    <p>Adzentura is a conceptual demonstration only and does not provide medical services, mental health treatment, or crisis intervention. This is not a functioning healthcare platform.</p>
+                </div>
+                
+                <div class="legal-card">
+                    <div class="legal-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacy & Data Security</h3>
+                    <p>This demonstration platform does not collect, store, or process any personal or health information. All user interactions are simulated for demonstration purposes.</p>
+                </div>
+                
+                <div class="legal-card">
+                    <div class="legal-icon">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3>Provider Relationships</h3>
+                    <p>No real healthcare providers are associated with this demonstration. Any provider information displayed is entirely fictional and for illustrative purposes only.</p>
+                </div>
+                
+                <div class="legal-card">
+                    <div class="legal-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3>Emergency Services</h3>
+                    <p>This platform cannot respond to emergencies. In crisis situations, always contact local emergency services or appropriate crisis hotlines.</p>
+                </div>
+            </div>
+            
+            <div class="compliance-status">
+                <h4>Legal Compliance Status: CONCEPT DEMONSTRATION ONLY</h4>
+                <p>This platform is a conceptual design demonstration and has not implemented the legal, regulatory, and compliance measures required for operating an actual healthcare service.</p>
+                <div class="compliance-list">
+                    <div class="compliance-item not-implemented">
+                        <i class="fas fa-times-circle"></i>
+                        <span>HIPAA Compliance Infrastructure</span>
+                    </div>
+                    <div class="compliance-item not-implemented">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Healthcare Provider Verification</span>
+                    </div>
+                    <div class="compliance-item not-implemented">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Medical Liability Insurance</span>
+                    </div>
+                    <div class="compliance-item not-implemented">
+                        <i class="fas fa-times-circle"></i>
+                        <span>State Healthcare Regulations</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Concept Demonstration</h3>
+                    <ul>
+                        <li><a href="#">Demo Overview</a></li>
+                        <li><a href="#">Feature Showcase</a></li>
+                        <li><a href="#">Technical Details</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal Information</h3>
+                    <ul>
+                        <li><a href="#">Medical Disclaimers</a></li>
+                        <li><a href="#">Privacy Information</a></li>
+                        <li><a href="#">Terms of Demo Use</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Real Mental Health Resources</h3>
+                    <ul>
+                        <li><a href="#">Crisis Hotlines</a></li>
+                        <li><a href="#">Finding Real Help</a></li>
+                        <li><a href="#">Emergency Services</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Adzentura Concept Demonstration. This is not a real healthcare service.</p>
+                <div class="credits">
+                    <p>Concept Design by Dylan Castro | Platform Demonstration Only</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Handle intro screen transition
+        document.addEventListener('DOMContentLoaded', function() {
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
+            
+            setTimeout(function() {
+                introScreen.style.opacity = '0';
+                
+                setTimeout(function() {
+                    introScreen.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    
+                    setTimeout(function() {
+                        mainContent.style.opacity = '1';
+                    }, 50);
+                }, 1500);
+            }, 4500);
+        });
+    </script>
 </body>
 </html>
