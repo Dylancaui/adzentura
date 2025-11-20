@@ -6,6 +6,7 @@
     <title>Adzentura | AI News Intelligence</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Your complete CSS from before */
         * {
             margin: 0;
             padding: 0;
@@ -874,6 +875,25 @@
             color: var(--dark);
         }
 
+        /* API Status Indicator */
+        .api-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            background: rgba(0, 216, 167, 0.1);
+            border: 1px solid rgba(0, 216, 167, 0.3);
+            color: #00d8a7;
+        }
+
+        .api-status.offline {
+            background: rgba(255, 71, 87, 0.1);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: #ff4757;
+        }
+
         /* Animations */
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
@@ -1021,6 +1041,7 @@
             <div class="live-indicator" id="live-indicator">
                 <div class="pulse-dot"></div>
                 <span>REAL-TIME UPDATES</span>
+                <span class="api-status" id="api-status">GUARDIAN API</span>
             </div>
         </div>
 
@@ -1242,7 +1263,8 @@
             apiCallsToday: 0,
             aiAnalysisCount: 0,
             isEmergencyMode: false,
-            systemStatus: 'operational'
+            systemStatus: 'operational',
+            currentApi: 'guardian'
         };
 
         let currentCategory = 'breaking';
@@ -1345,7 +1367,11 @@
                 const isEmergencyMode = checkCurrentEmergencyMode();
                 
                 if (isEmergencyMode) {
-                    // During emergency hours, only show breaking news
+                    // During emergency hours, use NewsAPI for breaking news only
+                    systemStats.currentApi = 'newsapi';
+                    document.getElementById('api-status').textContent = 'NEWS API';
+                    document.getElementById('api-status').className = 'api-status';
+                    
                     if (category === 'breaking') {
                         newsData = await fetchBreakingNews(todayFormatted);
                     } else {
@@ -1353,7 +1379,11 @@
                         newsData = await fetchLimitedNews(category, todayFormatted);
                     }
                 } else {
-                    // During regular hours, fetch full news for the category
+                    // During regular hours, use Guardian API for all categories
+                    systemStats.currentApi = 'guardian';
+                    document.getElementById('api-status').textContent = 'GUARDIAN API';
+                    document.getElementById('api-status').className = 'api-status';
+                    
                     newsData = await fetchRegularNews(category, todayFormatted);
                 }
                 
@@ -1378,76 +1408,55 @@
                 document.getElementById('system-alert').style.display = 'block';
                 document.getElementById('system-alert-message').textContent = 
                     'Our AI systems are currently experiencing technical difficulties. Basic news functionality remains available.';
+                
+                // Update API status to show error
+                document.getElementById('api-status').textContent = 'API OFFLINE';
+                document.getElementById('api-status').className = 'api-status offline';
             } finally {
                 hideLoading();
             }
         }
 
-        // Fetch breaking news (used during emergency hours)
+        // Fetch breaking news using NewsAPI (emergency hours)
         async function fetchBreakingNews(date) {
             systemStats.apiCallsToday++;
             
             try {
-                // Try News API first for breaking news
-                const newsApiUrl = `${API_CONFIG.newsApi.url}top-headlines?country=us&pageSize=10&apiKey=${API_CONFIG.newsApi.key}`;
+                // Use News API for breaking news
+                const newsApiUrl = `${API_CONFIG.newsApi.url}top-headlines?country=us&pageSize=8&apiKey=${API_CONFIG.newsApi.key}`;
+                console.log('Fetching from NewsAPI:', newsApiUrl);
+                
                 const response = await fetch(newsApiUrl);
                 
                 if (!response.ok) {
-                    throw new Error('News API request failed');
+                    throw new Error(`News API request failed: ${response.status}`);
                 }
                 
                 const data = await response.json();
+                console.log('NewsAPI response:', data);
                 
                 if (data.articles && data.articles.length > 0) {
-                    return data.articles.slice(0, 5).map(article => ({
+                    return data.articles.map(article => ({
                         title: article.title,
                         source: article.source.name,
                         description: article.description || 'No description available',
                         image: article.urlToImage || getFallbackImage('breaking'),
                         url: article.url,
-                        credibility: calculateCredibility(article),
+                        credibility: calculateCredibility(article, 'newsapi'),
                         breaking: true,
-                        analysis: generateAnalysis(article),
+                        analysis: generateAnalysis(article, 'newsapi'),
                         publishedAt: article.publishedAt
                     }));
+                } else {
+                    throw new Error('No articles found in NewsAPI response');
                 }
             } catch (error) {
                 console.error('Error fetching from News API:', error);
+                throw error;
             }
-            
-            // Fallback to Guardian API if News API fails
-            try {
-                const guardianUrl = `${API_CONFIG.guardianApi.url}search?api-key=${API_CONFIG.guardianApi.key}&page-size=5&show-fields=thumbnail,trailText`;
-                const response = await fetch(guardianUrl);
-                
-                if (!response.ok) {
-                    throw new Error('Guardian API request failed');
-                }
-                
-                const data = await response.json();
-                
-                if (data.response && data.response.results) {
-                    return data.response.results.slice(0, 5).map(article => ({
-                        title: article.webTitle,
-                        source: 'The Guardian',
-                        description: article.fields?.trailText || 'No description available',
-                        image: article.fields?.thumbnail || getFallbackImage('breaking'),
-                        url: article.webUrl,
-                        credibility: 85, // Guardian is generally reliable
-                        breaking: true,
-                        analysis: generateGuardianAnalysis(article),
-                        publishedAt: article.webPublicationDate
-                    }));
-                }
-            } catch (error) {
-                console.error('Error fetching from Guardian API:', error);
-            }
-            
-            // If both APIs fail, return fallback data
-            return getFallbackNews('breaking');
         }
 
-        // Fetch regular news during normal hours
+        // Fetch regular news using Guardian API (regular hours)
         async function fetchRegularNews(category, date) {
             systemStats.apiCallsToday++;
             
@@ -1455,50 +1464,25 @@
                 'politics': 'politics',
                 'technology': 'technology',
                 'economics': 'business',
-                'health': 'health',
-                'breaking': 'general'
+                'health': 'science',
+                'breaking': 'news'
             };
             
-            const apiCategory = categoryMapping[category] || 'general';
+            const apiCategory = categoryMapping[category] || 'news';
             
             try {
-                // Use News API for regular news
-                const newsApiUrl = `${API_CONFIG.newsApi.url}top-headlines?country=us&category=${apiCategory}&pageSize=8&apiKey=${API_CONFIG.newsApi.key}`;
-                const response = await fetch(newsApiUrl);
+                // Use Guardian API for regular news
+                const guardianUrl = `${API_CONFIG.guardianApi.url}search?api-key=${API_CONFIG.guardianApi.key}&section=${apiCategory}&page-size=8&show-fields=thumbnail,trailText&from-date=${date}&to-date=${date}`;
+                console.log('Fetching from Guardian:', guardianUrl);
                 
-                if (!response.ok) {
-                    throw new Error('News API request failed');
-                }
-                
-                const data = await response.json();
-                
-                if (data.articles && data.articles.length > 0) {
-                    return data.articles.map(article => ({
-                        title: article.title,
-                        source: article.source.name,
-                        description: article.description || 'No description available',
-                        image: article.urlToImage || getFallbackImage(category),
-                        url: article.url,
-                        credibility: calculateCredibility(article),
-                        breaking: category === 'breaking',
-                        analysis: generateAnalysis(article),
-                        publishedAt: article.publishedAt
-                    }));
-                }
-            } catch (error) {
-                console.error('Error fetching from News API:', error);
-            }
-            
-            // Fallback to Guardian API
-            try {
-                const guardianUrl = `${API_CONFIG.guardianApi.url}search?api-key=${API_CONFIG.guardianApi.key}&section=${apiCategory}&page-size=8&show-fields=thumbnail,trailText`;
                 const response = await fetch(guardianUrl);
                 
                 if (!response.ok) {
-                    throw new Error('Guardian API request failed');
+                    throw new Error(`Guardian API request failed: ${response.status}`);
                 }
                 
                 const data = await response.json();
+                console.log('Guardian response:', data);
                 
                 if (data.response && data.response.results) {
                     return data.response.results.map(article => ({
@@ -1507,18 +1491,18 @@
                         description: article.fields?.trailText || 'No description available',
                         image: article.fields?.thumbnail || getFallbackImage(category),
                         url: article.webUrl,
-                        credibility: 85,
+                        credibility: calculateCredibility(article, 'guardian'),
                         breaking: category === 'breaking',
                         analysis: generateGuardianAnalysis(article),
                         publishedAt: article.webPublicationDate
                     }));
+                } else {
+                    throw new Error('No articles found in Guardian API response');
                 }
             } catch (error) {
                 console.error('Error fetching from Guardian API:', error);
+                throw error;
             }
-            
-            // If both APIs fail, return fallback data
-            return getFallbackNews(category);
         }
 
         // Fetch limited news during emergency hours for non-breaking categories
@@ -1543,38 +1527,60 @@
             }];
         }
 
-        // Calculate credibility score based on article properties
-        function calculateCredibility(article) {
+        // Calculate credibility score based on article properties (0-100 scale)
+        function calculateCredibility(article, apiType) {
             let score = 70; // Base score
             
-            // Source reputation (simplified)
-            const reputableSources = ['Reuters', 'Associated Press', 'BBC News', 'The Guardian'];
-            if (reputableSources.includes(article.source?.name)) {
-                score += 15;
+            if (apiType === 'guardian') {
+                // Guardian articles get higher base credibility
+                score = 85;
+                
+                // Additional factors for Guardian
+                if (article.fields?.trailText && article.fields.trailText.length > 100) {
+                    score += 5;
+                }
+                
+                if (article.fields?.thumbnail) {
+                    score += 5;
+                }
+                
+                // Section-based credibility adjustments
+                const highCredibilitySections = ['news', 'politics', 'science'];
+                if (highCredibilitySections.includes(article.sectionId)) {
+                    score += 3;
+                }
+            } else {
+                // NewsAPI credibility calculation
+                const reputableSources = ['Reuters', 'Associated Press', 'BBC News'];
+                if (reputableSources.includes(article.source?.name)) {
+                    score += 15;
+                }
+                
+                // Content indicators
+                if (article.description && article.description.length > 100) {
+                    score += 5;
+                }
+                
+                if (article.urlToImage) {
+                    score += 5;
+                }
+                
+                if (article.author) {
+                    score += 5;
+                }
             }
             
-            // Content indicators
-            if (article.description && article.description.length > 100) {
-                score += 5;
-            }
-            
-            if (article.urlToImage) {
-                score += 5;
-            }
-            
-            if (article.author) {
-                score += 5;
-            }
-            
-            // Ensure score is between 50 and 95
-            return Math.min(Math.max(score, 50), 95);
+            // Ensure score is between 0 and 100
+            return Math.min(Math.max(score, 0), 100);
         }
 
         // Generate analysis for News API articles
-        function generateAnalysis(article) {
+        function generateAnalysis(article, apiType) {
+            const credibility = calculateCredibility(article, apiType);
+            
             return {
                 crossVerification: "Multiple source verification",
-                factuality: `${calculateCredibility(article)}% factual accuracy`,
+                factuality: `${credibility}% factual accuracy`,
                 biasDetection: "Standard media bias analysis",
                 timeliness: "Recent news coverage",
                 summary: "AI analysis complete"
@@ -1583,9 +1589,11 @@
 
         // Generate analysis for Guardian API articles
         function generateGuardianAnalysis(article) {
+            const credibility = calculateCredibility(article, 'guardian');
+            
             return {
                 crossVerification: "Editorial review process",
-                factuality: "85% factual accuracy",
+                factuality: `${credibility}% factual accuracy`,
                 biasDetection: "Center-left media bias detected",
                 timeliness: "Current news reporting",
                 summary: "Established media source"
