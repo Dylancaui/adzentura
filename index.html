@@ -1244,12 +1244,12 @@
     <script>
         // API Configuration with your keys
         const API_CONFIG = {
-            newsApi: {
-                key: 'fb94f4774ff74293b548134795c70ca8',
-                url: 'https://newsapi.org/v2/'
+            gnewsApi: {
+                key: 'd7ce9e191c4bc11b54d13421c7ce2aaf',
+                url: 'https://gnews.io/api/v4/'
             },
             guardianApi: {
-                key: 'eb844cea-1049-47df-ba37-96b182-69dea8',
+                key: 'eb844cea-1049-47df-ba37-96b18269dea8',
                 url: 'https://content.guardianapis.com/'
             }
         };
@@ -1367,9 +1367,9 @@
                 const isEmergencyMode = checkCurrentEmergencyMode();
                 
                 if (isEmergencyMode) {
-                    // During emergency hours, use NewsAPI for breaking news only
-                    systemStats.currentApi = 'newsapi';
-                    document.getElementById('api-status').textContent = 'NEWS API';
+                    // During emergency hours, use GNews API for breaking news only
+                    systemStats.currentApi = 'gnews';
+                    document.getElementById('api-status').textContent = 'GNEWS API';
                     document.getElementById('api-status').className = 'api-status';
                     
                     if (category === 'breaking') {
@@ -1417,41 +1417,41 @@
             }
         }
 
-        // Fetch breaking news using NewsAPI (emergency hours)
+        // Fetch breaking news using GNews API (emergency hours)
         async function fetchBreakingNews(date) {
             systemStats.apiCallsToday++;
             
             try {
-                // Use News API for breaking news
-                const newsApiUrl = `${API_CONFIG.newsApi.url}top-headlines?country=us&pageSize=8&apiKey=${API_CONFIG.newsApi.key}`;
-                console.log('Fetching from NewsAPI:', newsApiUrl);
+                // Use GNews API for breaking news
+                const gnewsUrl = `${API_CONFIG.gnewsApi.url}top-headlines?token=${API_CONFIG.gnewsApi.key}&lang=en&max=8`;
+                console.log('Fetching from GNews:', gnewsUrl);
                 
-                const response = await fetch(newsApiUrl);
+                const response = await fetch(gnewsUrl);
                 
                 if (!response.ok) {
-                    throw new Error(`News API request failed: ${response.status}`);
+                    throw new Error(`GNews API request failed: ${response.status}`);
                 }
                 
                 const data = await response.json();
-                console.log('NewsAPI response:', data);
+                console.log('GNews response:', data);
                 
                 if (data.articles && data.articles.length > 0) {
                     return data.articles.map(article => ({
                         title: article.title,
                         source: article.source.name,
                         description: article.description || 'No description available',
-                        image: article.urlToImage || getFallbackImage('breaking'),
+                        image: article.image || getFallbackImage('breaking'),
                         url: article.url,
-                        credibility: calculateCredibility(article, 'newsapi'),
+                        credibility: calculateCredibility(article, 'gnews'),
                         breaking: true,
-                        analysis: generateAnalysis(article, 'newsapi'),
+                        analysis: generateAnalysis(article, 'gnews'),
                         publishedAt: article.publishedAt
                     }));
                 } else {
-                    throw new Error('No articles found in NewsAPI response');
+                    throw new Error('No articles found in GNews API response');
                 }
             } catch (error) {
-                console.error('Error fetching from News API:', error);
+                console.error('Error fetching from GNews API:', error);
                 throw error;
             }
         }
@@ -1550,7 +1550,7 @@
                     score += 3;
                 }
             } else {
-                // NewsAPI credibility calculation
+                // GNews credibility calculation
                 const reputableSources = ['Reuters', 'Associated Press', 'BBC News'];
                 if (reputableSources.includes(article.source?.name)) {
                     score += 15;
@@ -1561,11 +1561,11 @@
                     score += 5;
                 }
                 
-                if (article.urlToImage) {
+                if (article.image) {
                     score += 5;
                 }
                 
-                if (article.author) {
+                if (article.content) {
                     score += 5;
                 }
             }
@@ -1574,7 +1574,7 @@
             return Math.min(Math.max(score, 0), 100);
         }
 
-        // Generate analysis for News API articles
+        // Generate analysis for GNews API articles
         function generateAnalysis(article, apiType) {
             const credibility = calculateCredibility(article, apiType);
             
