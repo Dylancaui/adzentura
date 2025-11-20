@@ -3,961 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adzentura | Mental Health Platform Demo</title>
+    <title>Adzentura | Advanced News Analysis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --primary-light: #dbeafe;
-            --secondary: #7c3aed;
-            --accent: #06b6d4;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --dark: #0f172a;
-            --darker: #020617;
-            --light: #f8fafc;
-            --lighter: #ffffff;
-            --text: #334155;
-            --text-light: #64748b;
-            --text-lighter: #94a3b8;
-            --border: #e2e8f0;
-            --border-light: #f1f5f9;
-            --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-            --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --accent: #ff2d75;
+            --dark: #0f1419;
+            --darker: #0a0e14;
+            --light: #ffffff;
+            --gray: #8a8f98;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         body {
-            background: var(--light);
-            color: var(--text);
-            line-height: 1.6;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            color: var(--light);
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Enhanced Demo Intro Screen */
-        #demo-intro {
+        /* Loading Screen */
+        #loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--gradient-dark);
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10000;
-            padding: 2rem;
+            z-index: 2000;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
         }
 
-        .intro-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .floating-shape {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 50%;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        .shape-1 {
-            width: 300px;
-            height: 300px;
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .shape-2 {
-            width: 200px;
-            height: 200px;
-            top: 60%;
-            right: 10%;
-            animation-delay: 2s;
-        }
-
-        .shape-3 {
-            width: 150px;
-            height: 150px;
-            bottom: 20%;
-            left: 15%;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(120deg); }
-            66% { transform: translateY(10px) rotate(240deg); }
-        }
-
-        .logo-container {
+        .loading-content {
             text-align: center;
-            margin-bottom: 2rem;
-            z-index: 2;
-            opacity: 0;
-            animation: fadeInUp 1.5s ease-out 0.5s forwards;
+            position: relative;
         }
 
         .logo-main {
-            font-size: 5.5rem;
+            font-size: 5rem;
             font-weight: 800;
-            color: white;
-            letter-spacing: 6px;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            position: relative;
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        .logo-main::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 2px;
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(0, 242, 254, 0.8), 0 0 40px rgba(79, 172, 254, 0.6);
+            }
         }
 
-        .logo-subtitle {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.85);
-            letter-spacing: 10px;
-            text-transform: uppercase;
+        .loading-subtitle {
+            font-size: 1.5rem;
+            color: var(--gray);
+            margin-bottom: 3rem;
             font-weight: 300;
-            margin-top: 1.5rem;
-        }
-
-        .demo-warning-intro {
-            background: rgba(230, 126, 34, 0.85);
-            color: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 2rem auto;
-            text-align: center;
-            z-index: 2;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 1.5s forwards;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .demo-warning-intro h3 {
-            margin-bottom: 0.8rem;
-            font-size: 1.3rem;
-        }
-
-        .release-info {
-            background: rgba(16, 185, 129, 0.85);
-            color: white;
-            padding: 1.5rem 2rem;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: 1rem auto;
-            text-align: center;
-            z-index: 2;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 2s forwards;
-        }
-
-        .credits {
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            margin-top: 2rem;
-            z-index: 2;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 2.5s forwards;
-        }
-
-        .loading-container {
-            width: 300px;
-            z-index: 2;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 2s forwards;
-        }
-
-        .loading-text {
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
             letter-spacing: 2px;
         }
 
-        .loading-bar {
+        .loading-animation {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .loading-circle {
             width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            overflow: hidden;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            position: relative;
+        }
+
+        .loading-circle::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--secondary);
+            border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+
+        .loading-circle::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            right: 12px;
+            bottom: 12px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 2.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 2rem auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
             height: 100%;
             width: 0%;
-            background: var(--accent);
-            border-radius: 3px;
-            animation: loading 3.5s ease-in-out 2.5s forwards;
-            box-shadow: 0 0 10px var(--accent);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            animation: loading 3s ease-in-out forwards;
+            position: relative;
         }
 
         @keyframes loading {
             0% { width: 0%; }
-            70% { width: 90%; }
+            20% { width: 25%; }
+            40% { width: 50%; }
+            60% { width: 75%; }
+            80% { width: 90%; }
             100% { width: 100%; }
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Main App */
-        #main-app {
-            display: none;
-            min-height: 100vh;
-            opacity: 0;
-            transition: opacity 1s ease-in;
-        }
-
-        /* Demo Banner - Always Visible */
-        .demo-banner {
-            background: var(--warning);
-            color: white;
-            padding: 0.8rem;
+        .creator-credit {
+            position: absolute;
+            bottom: 2rem;
             text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .demo-banner i {
+            width: 100%;
+            color: var(--gray);
             font-size: 1rem;
+            letter-spacing: 1px;
         }
 
-        /* Enhanced Header */
-        header {
-            background: var(--lighter);
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 40px;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border-light);
+        .creator-name {
+            color: var(--primary);
+            font-weight: 600;
         }
 
-        .header-content {
+        /* Login Screen */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
+            z-index: 1000;
+            transition: var(--transition);
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(20px);
+            animation: floatIn 1s ease-out forwards;
+        }
+
+        @keyframes floatIn {
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .logo {
-            font-size: 1.75rem;
+            font-size: 3.5rem;
             font-weight: 800;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
         }
 
-        .logo-badge {
-            background: var(--warning);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 242, 254, 0.2);
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
         }
 
-        .nav-main {
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+        }
+
+        /* Main Interface */
+        #main-interface {
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 3rem;
             display: flex;
-            gap: 0.5rem;
-            background: var(--light);
-            padding: 0.5rem;
-            border-radius: var(--radius-md);
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .nav-main a {
-            color: var(--text);
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--gray);
             text-decoration: none;
             font-weight: 500;
-            padding: 0.75rem 1.25rem;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s ease;
+            transition: var(--transition);
             position: relative;
         }
 
-        .nav-main a:hover {
-            color: var(--primary);
-            background: var(--lighter);
+        .nav-link:hover {
+            color: var(--light);
         }
 
-        .nav-main a.active {
-            background: var(--lighter);
+        .nav-link.active {
             color: var(--primary);
-            box-shadow: var(--shadow-sm);
         }
 
-        .nav-main a.active::after {
+        .nav-link.active::after {
             content: '';
             position: absolute;
-            bottom: -1px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
             height: 2px;
             background: var(--primary);
-            border-radius: 1px;
         }
 
-        .user-menu {
+        /* Category Filter */
+        .category-filter {
+            padding: 1.5rem 3rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-buttons {
             display: flex;
-            align-items: center;
             gap: 1rem;
-        }
-
-        .admin-btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .admin-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* Enhanced Dashboard */
-        .dashboard {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .welcome-banner {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 2.5rem;
-            border-radius: var(--radius-lg);
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-banner::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
-        .welcome-banner h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-banner p {
-            opacity: 0.9;
-            font-size: 1.1rem;
-            max-width: 600px;
-        }
-
-        /* Demo Notice */
-        .demo-notice {
-            background: #fff8e1;
-            border: 2px solid #ffeaa7;
-            padding: 2rem;
-            margin: 2rem auto;
-            max-width: 1200px;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            box-shadow: var(--shadow-md);
-        }
-
-        .demo-notice h3 {
-            color: #8d6e10;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .demo-notice p {
-            color: #8d6e10;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-
-        .warning-list {
-            text-align: left;
-            max-width: 600px;
-            margin: 1.5rem auto;
-        }
-
-        .warning-list li {
-            margin-bottom: 0.8rem;
-            color: #8d6e10;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Crisis Warning */
-        .crisis-warning {
-            background: #ffeaa7;
-            border: 1px solid #fdcb6e;
-            color: #8d6e10;
-            padding: 1.5rem;
-            border-radius: var(--radius-lg);
-            max-width: 800px;
-            margin: 2rem auto;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .crisis-warning h4 {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .crisis-contacts {
-            display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-            gap: 2rem;
-            margin-top: 1.5rem;
         }
 
-        .crisis-contact {
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--darker);
+            border-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 3rem;
             text-align: center;
+            background: radial-gradient(circle at center, rgba(79, 172, 254, 0.1) 0%, transparent 70%);
         }
 
-        .crisis-contact .number {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--warning);
-        }
-
-        /* Enhanced Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--lighter);
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--gradient-primary);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .stat-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
             margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--light) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
         }
 
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-light);
-            border-radius: var(--radius-md);
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+        }
+
+        .analysis-stats {
             display: flex;
-            align-items: center;
             justify-content: center;
-            color: var(--primary);
-            font-size: 1.25rem;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat {
+            text-align: center;
         }
 
         .stat-value {
             font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-            line-height: 1;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .stat-label {
-            color: var(--text-light);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        /* Enhanced Features Grid */
-        .section-header {
-            display: flex;
-            justify-content: between;
-            align-items: end;
-            margin: 3rem 0 1.5rem 0;
-        }
-
-        .section-header h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .feature-card {
-            background: var(--lighter);
-            padding: 2.5rem 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            border: 1px solid var(--border-light);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: 'DEMO CONTENT';
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--warning);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            z-index: 2;
-        }
-
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--gradient-primary);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .feature-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            color: white;
-            font-size: 1.75rem;
-            box-shadow: var(--shadow-md);
-        }
-
-        .feature-card h3 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-
-        .feature-card p {
-            color: var(--text-light);
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            font-size: 1rem;
-        }
-
-        .feature-btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .feature-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* Enhanced Clinic Finder */
-        .clinic-finder {
-            background: var(--lighter);
-            border-radius: var(--radius-lg);
-            padding: 2.5rem;
-            margin: 3rem 0;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-        }
-
-        .search-header {
-            display: flex;
-            justify-content: between;
-            align-items: end;
-            margin-bottom: 2rem;
-        }
-
-        .search-header h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        .search-bar {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr auto;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .search-input {
-            padding: 1rem 1.5rem;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            background: var(--lighter);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .search-btn {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .search-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .clinics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .clinic-card {
-            background: var(--lighter);
-            border: 1px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .clinic-card::before {
-            content: 'DEMO CONTENT';
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: var(--warning);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .clinic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--primary-light);
-        }
-
-        .clinic-header {
-            display: flex;
-            justify-content: between;
-            align-items: start;
-            margin-bottom: 1.5rem;
-        }
-
-        .clinic-name {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .clinic-specialties {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .specialty-tag {
-            background: var(--primary-light);
-            color: var(--primary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .clinic-meta {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .clinic-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--success);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
             font-size: 0.9rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .clinic-actions {
+        /* News Grid */
+        .news-grid {
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
             display: flex;
+            align-items: center;
             gap: 1rem;
         }
 
-        .btn-book {
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 600;
-            flex: 1;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-book:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-details {
-            background: transparent;
+        .section-title i {
             color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
         }
 
-        .btn-details:hover {
-            background: var(--primary-light);
+        .news-category {
+            margin-bottom: 4rem;
         }
 
-        /* Legal Compliance Section */
-        .legal-section {
-            padding: 5rem 2rem;
-            background: var(--light);
-        }
-
-        .legal-grid {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto 3rem;
         }
 
-        .legal-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            border-left: 4px solid var(--warning);
+        .news-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
 
-        .legal-icon {
-            font-size: 2rem;
-            color: var(--warning);
+        .news-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 242, 254, 0.2);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-source {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .source-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .credibility-score {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .score-high {
+            color: #00d8a7;
+            border: 1px solid rgba(0, 216, 167, 0.3);
+        }
+
+        .score-medium {
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .score-low {
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .card-analysis {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.5;
             margin-bottom: 1.5rem;
         }
 
-        .legal-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
+        .analysis-details {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
         }
 
-        .legal-card p {
-            color: var(--text-light);
-            line-height: 1.6;
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
         }
 
-        .compliance-status {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            border: 2px solid #ffeaa7;
+        .detail-label {
+            color: var(--gray);
         }
 
-        .compliance-status h4 {
-            color: var(--warning);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            text-align: center;
+        .detail-value {
+            font-weight: 600;
         }
 
-        .compliance-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+        .verification-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
         }
 
-        .compliance-item {
+        .badge {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
             display: flex;
             align-items: center;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: var(--radius-md);
+            gap: 0.3rem;
         }
 
-        .compliance-item i {
-            margin-right: 1rem;
-            font-size: 1.2rem;
+        .badge.verified {
+            color: #00d8a7;
+            border: 1px solid rgba(0, 216, 167, 0.3);
         }
 
-        .not-implemented {
-            color: #dc3545;
+        .badge.partial {
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.3);
         }
 
-        .not-implemented i {
-            color: #dc3545;
+        .badge.unverified {
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.3);
         }
 
         /* Footer */
         footer {
-            background: var(--dark);
-            color: white;
-            padding: 4rem 2rem 2rem;
+            padding: 3rem;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .footer-content {
@@ -968,521 +578,796 @@
             gap: 3rem;
         }
 
-        .footer-column h3 {
+        .footer-section h3 {
             font-size: 1.2rem;
             margin-bottom: 1.5rem;
-            color: var(--accent);
+            color: var(--light);
         }
 
-        .footer-column ul {
+        .footer-links {
             list-style: none;
         }
 
-        .footer-column li {
+        .footer-links li {
             margin-bottom: 0.8rem;
         }
 
-        .footer-column a {
-            color: rgba(255, 255, 255, 0.7);
+        .footer-links a {
+            color: var(--gray);
             text-decoration: none;
-            transition: color 0.3s;
+            transition: var(--transition);
         }
 
-        .footer-column a:hover {
-            color: white;
+        .footer-links a:hover {
+            color: var(--primary);
         }
 
-        .copyright {
-            text-align: center;
+        .disclaimer {
             margin-top: 3rem;
             padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .credits {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
-            margin-top: 1rem;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .search-bar {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .clinics-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .nav-main {
-                width: 100%;
-                overflow-x: auto;
-            }
-
-            .dashboard {
-                padding: 1rem;
-            }
-
-            .welcome-banner {
-                padding: 2rem 1.5rem;
-            }
-
-            .welcome-banner h1 {
-                font-size: 1.75rem;
-            }
-
-            .search-bar {
-                grid-template-columns: 1fr;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .logo-main {
-                font-size: 3.5rem;
-                letter-spacing: 4px;
-            }
-            
-            .logo-subtitle {
-                font-size: 1rem;
-                letter-spacing: 5px;
-            }
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         /* Animations */
-        .animate-in {
-            animation: fadeInUp 0.6s ease-out;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo-main {
+                font-size: 3.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .analysis-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .news-grid {
+                padding: 1.5rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .category-filter {
+                padding: 1rem;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Demo Intro Screen -->
-    <div id="demo-intro">
-        <div class="intro-background">
-            <div class="floating-shape shape-1"></div>
-            <div class="floating-shape shape-2"></div>
-            <div class="floating-shape shape-3"></div>
-        </div>
-        
-        <div class="logo-container">
-            <div class="logo-main">ADZENTURA</div>
-            <div class="logo-subtitle">Mental Health Platform</div>
-        </div>
-        
-        <div class="demo-warning-intro">
-            <h3><i class="fas fa-exclamation-circle"></i> CONCEPT DEMONSTRATION</h3>
-            <p>This is a design concept only. Adzentura is not a real mental health service and provides no medical advice or treatment.</p>
-        </div>
-
-        <div class="release-info">
-            <h4><i class="fas fa-calendar"></i> Release Information</h4>
-            <p>An official release date for Adzentura has not been decided yet. This is a preview demonstration.</p>
-        </div>
-
-        <div class="credits">
-            <p>Developed by Dylan Castro | Endorsed by Jemway</p>
-        </div>
-        
-        <div class="loading-container">
-            <div class="loading-text">LOADING DEMONSTRATION</div>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="logo-main">Adzentura</div>
+            <div class="loading-subtitle">INITIALIZING NEWS ANALYSIS PLATFORM</div>
+            <div class="loading-animation">
+                <div class="loading-circle"></div>
             </div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        <div class="creator-credit">Created by <span class="creator-name">Dylan Castro</span></div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="logo">Adzentura</div>
+            <div class="tagline">Advanced News Analysis & Verification Platform</div>
+            <input type="password" class="password-input" id="password-input" placeholder="Enter Access Code">
+            <button class="login-btn" id="login-btn">Access Platform</button>
         </div>
     </div>
 
-    <!-- Main Application -->
-    <div id="main-app">
-        <!-- Demo Banner -->
-        <div class="demo-banner">
-            <i class="fas fa-exclamation-triangle"></i>
-            CONCEPT DEMONSTRATION ONLY - NOT A REAL MENTAL HEALTH SERVICE
-        </div>
-
-        <!-- Header -->
+    <!-- Main Interface -->
+    <div id="main-interface">
         <header>
-            <div class="header-content">
-                <a href="#" class="logo">
-                    <i class="fas fa-brain"></i>
-                    ADZENTURA
-                    <span class="logo-badge">DEMO</span>
-                </a>
-                <nav class="nav-main">
-                    <a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a>
-                    <a href="#"><i class="fas fa-search-location"></i> Find Care</a>
-                    <a href="#"><i class="fas fa-calendar-check"></i> Appointments</a>
-                    <a href="#"><i class="fas fa-book-medical"></i> Resources</a>
-                </nav>
-                <div class="user-menu">
-                    <button class="admin-btn" onclick="toggleAdminPanel()">
-                        <i class="fas fa-cog"></i>
-                        Demo Controls
-                    </button>
-                </div>
-            </div>
+            <div class="nav-logo">Adzentura</div>
+            <nav class="nav-links">
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Analysis</a>
+                <a href="#" class="nav-link">Sources</a>
+                <a href="#" class="nav-link">Methodology</a>
+                <a href="#" class="nav-link">About</a>
+            </nav>
         </header>
 
-        <!-- Dashboard -->
-        <main class="dashboard">
-            <!-- Welcome Banner -->
-            <div class="welcome-banner animate-in">
-                <h1>Adzentura Platform Demo</h1>
-                <p>Concept demonstration of a mental health platform. This is not a functioning service.</p>
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="all">All News</button>
+                <button class="filter-btn" data-category="politics">Politics</button>
+                <button class="filter-btn" data-category="economics">Economics</button>
+                <button class="filter-btn" data-category="legal">Legal Affairs</button>
+                <button class="filter-btn" data-category="technology">Technology</button>
+                <button class="filter-btn" data-category="international">International</button>
             </div>
+        </div>
 
-            <!-- Demo Notice -->
-            <section class="demo-notice">
-                <h3><i class="fas fa-exclamation-triangle"></i> IMPORTANT LEGAL DISCLAIMER</h3>
-                <p>This website represents a conceptual design demonstration only. Adzentura is not an operating mental health service and does not provide any medical advice, treatment, or emergency services.</p>
-                
-                <div class="warning-list">
-                    <li><i class="fas fa-times-circle"></i> No real medical services are provided</li>
-                    <li><i class="fas fa-times-circle"></i> All provider information is fictional</li>
-                    <li><i class="fas fa-times-circle"></i> No user data is collected or stored</li>
-                    <li><i class="fas fa-times-circle"></i> This platform cannot respond to emergencies</li>
-                    <li><i class="fas fa-times-circle"></i> No healthcare provider relationships exist</li>
+        <section class="hero">
+            <h1>Advanced News Verification & Analysis</h1>
+            <p>Adzentura uses cutting-edge AI and multi-source verification to provide credibility assessments for news content. Our platform analyzes articles across multiple dimensions to help you make informed decisions.</p>
+            
+            <div class="analysis-stats">
+                <div class="stat">
+                    <div class="stat-value">12,847</div>
+                    <div class="stat-label">Articles Analyzed</div>
                 </div>
-                
-                <p><strong>This is a portfolio demonstration piece only.</strong></p>
-            </section>
-
-            <!-- Crisis Warning -->
-            <section class="crisis-warning">
-                <h4><i class="fas fa-life-ring"></i> If You Need Mental Health Support</h4>
-                <p>This demonstration cannot provide mental health support. If you are experiencing a mental health crisis or need immediate assistance, please contact these real resources:</p>
-                <div class="crisis-contacts">
-                    <div class="crisis-contact">
-                        <div class="number">988</div>
-                        <div>Suicide & Crisis Lifeline</div>
-                    </div>
-                    <div class="crisis-contact">
-                        <div class="number">911</div>
-                        <div>Emergency Services</div>
-                    </div>
+                <div class="stat">
+                    <div class="stat-value">94.3%</div>
+                    <div class="stat-label">Accuracy Rate</div>
                 </div>
-            </section>
-
-            <!-- Stats Grid -->
-            <div class="stats-grid">
-                <div class="stat-card animate-in">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">1,247</div>
-                    <div class="stat-label">Demo Platform Users</div>
-                </div>
-                <div class="stat-card animate-in">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-hospital"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">89</div>
-                    <div class="stat-label">Demo Healthcare Providers</div>
-                </div>
-                <div class="stat-card animate-in">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-calendar-check"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">342</div>
-                    <div class="stat-label">Demo Sessions This Month</div>
-                </div>
-                <div class="stat-card animate-in">
-                    <div class="stat-header">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">94.2%</div>
-                    <div class="stat-label">Demo Satisfaction Rate</div>
+                <div class="stat">
+                    <div class="stat-value">187</div>
+                    <div class="stat-label">Sources Monitored</div>
                 </div>
             </div>
+        </section>
 
-            <!-- Features Section -->
-            <div class="section-header">
-                <h2>Platform Concept Features</h2>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card animate-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-search-location"></i>
-                    </div>
-                    <h3>Provider Matching Concept</h3>
-                    <p>Demonstration of how users might find mental health professionals. All provider information shown is fictional and for demonstration purposes only.</p>
-                    <button class="feature-btn">
-                        Explore Demo
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <div class="feature-card animate-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <h3>Scheduling System Demo</h3>
-                    <p>Concept interface for appointment management. No real appointments can be scheduled through this demonstration platform.</p>
-                    <button class="feature-btn">
-                        View Demo
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-
-                <div class="feature-card animate-in">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Security Concept</h3>
-                    <p>Demonstration of security features. This demo platform does not implement real security measures or handle sensitive data.</p>
-                    <button class="feature-btn">
-                        Security Demo
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Clinic Finder -->
-            <div class="clinic-finder animate-in">
-                <div class="search-header">
-                    <h2>Demo Clinic Finder</h2>
-                </div>
-
-                <div class="search-bar">
-                    <input type="text" class="search-input" placeholder="Demo location search...">
-                    <select class="search-input">
-                        <option>Demo specialty filter</option>
-                        <option>Anxiety</option>
-                        <option>Depression</option>
-                        <option>Trauma</option>
-                    </select>
-                    <select class="search-input">
-                        <option>Demo insurance filter</option>
-                        <option>Blue Cross</option>
-                        <option>Aetna</option>
-                    </select>
-                    <button class="search-btn">
-                        <i class="fas fa-search"></i>
-                        Demo Search
-                    </button>
-                </div>
-
-                <div class="clinics-grid">
-                    <div class="clinic-card">
-                        <div class="clinic-header">
-                            <div class="clinic-info">
-                                <div class="clinic-name">Mindful Therapy Center</div>
-                                <div class="clinic-specialties">
-                                    <span class="specialty-tag">Anxiety</span>
-                                    <span class="specialty-tag">Depression</span>
-                                    <span class="specialty-tag">Trauma</span>
+        <section class="news-grid">
+            <!-- Politics Section -->
+            <div class="news-category" data-category="politics">
+                <h2 class="section-title"><i class="fas fa-landmark"></i> Political News</h2>
+                <div class="grid">
+                    <!-- Politics Card 1 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1580137189272-c9379f8864fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Trump Epstein" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Political Times</span>
+                                <span class="credibility-score score-medium">68% Credible</span>
+                            </div>
+                            <h3 class="card-title">New Documents Reveal Trump-Epstein Connections</h3>
+                            <p class="card-analysis">Flight logs and witness testimonies show multiple interactions. Some claims lack direct evidence while others are well-documented.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Medium (3.4/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">7/12 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Moderate (Partisan framing)</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="clinic-meta">
-                            <div class="clinic-rating">
-                                <i class="fas fa-star"></i>
-                                4.8 (Demo)
+                            
+                            <div class="verification-badges">
+                                <div class="badge partial"><i class="fas fa-exclamation-triangle"></i> Mixed Evidence</div>
+                                <div class="badge verified"><i class="fas fa-file-alt"></i> Documents Verified</div>
                             </div>
-                        </div>
-                        <div class="clinic-actions">
-                            <button class="btn-book">
-                                <i class="fas fa-calendar-plus"></i>
-                                Demo Booking
-                            </button>
-                            <button class="btn-details">
-                                Demo Details
-                            </button>
                         </div>
                     </div>
 
-                    <div class="clinic-card">
-                        <div class="clinic-header">
-                            <div class="clinic-info">
-                                <div class="clinic-name">Harmony Mental Health</div>
-                                <div class="clinic-specialties">
-                                    <span class="specialty-tag">Couples</span>
-                                    <span class="specialty-tag">Family</span>
-                                    <span class="specialty-tag">Individual</span>
+                    <!-- Politics Card 2 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1551135049-8a33b42738b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Election" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Election Watch</span>
+                                <span class="credibility-score score-high">89% Credible</span>
+                            </div>
+                            <h3 class="card-title">2024 Election Polls Show Tight Race in Swing States</h3>
+                            <p class="card-analysis">Polling data from multiple reputable sources shows consistent trends. Margin of error calculations are properly disclosed.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.3/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">14/16 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Data-driven)</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="clinic-meta">
-                            <div class="clinic-rating">
-                                <i class="fas fa-star"></i>
-                                4.9 (Demo)
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-chart-bar"></i> Data Verified</div>
+                                <div class="badge verified"><i class="fas fa-balance-scale"></i> Multiple Sources</div>
                             </div>
                         </div>
-                        <div class="clinic-actions">
-                            <button class="btn-book">
-                                <i class="fas fa-calendar-plus"></i>
-                                Demo Booking
-                            </button>
-                            <button class="btn-details">
-                                Demo Details
-                            </button>
+                    </div>
+
+                    <!-- Politics Card 3 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Immigration" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Policy Review</span>
+                                <span class="credibility-score score-medium">72% Credible</span>
+                            </div>
+                            <h3 class="card-title">Border Policy Changes Show Mixed Results in First Quarter</h3>
+                            <p class="card-analysis">Official government data supports some claims, while others rely on anecdotal evidence. Expert opinions vary significantly.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Medium (3.6/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">9/13 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Moderate (Selective data)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge partial"><i class="fas fa-exclamation-triangle"></i> Incomplete Data</div>
+                                <div class="badge verified"><i class="fas fa-database"></i> Official Stats Used</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Politics Card 4 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1551836026-d5c8c2a45c33?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Supreme Court" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Legal Observer</span>
+                                <span class="credibility-score score-high">91% Credible</span>
+                            </div>
+                            <h3 class="card-title">Supreme Court to Hear Landmark Social Media Case</h3>
+                            <p class="card-analysis">Case details and legal arguments accurately reported. Historical context provided with proper citations to previous rulings.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.5/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">16/17 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Legal analysis)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-gavel"></i> Legal Analysis</div>
+                                <div class="badge verified"><i class="fas fa-book"></i> Proper Citations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Politics Card 5 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1575320181282-9afab399332c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Campaign" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Campaign Insider</span>
+                                <span class="credibility-score score-low">45% Credible</span>
+                            </div>
+                            <h3 class="card-title">Secret Donor Network Funding Presidential Campaigns</h3>
+                            <p class="card-analysis">Claims rely heavily on anonymous sources with limited documentation. Some financial data conflicts with official filings.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Low (2.3/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">4/11 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">High (Conspiracy framing)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge unverified"><i class="fas fa-times-circle"></i> Anonymous Sources</div>
+                                <div class="badge unverified"><i class="fas fa-exclamation-circle"></i> Data Conflicts</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Legal Compliance Section -->
-            <section class="legal-section">
-                <div class="section-header">
-                    <h2>Legal Information & Disclaimers</h2>
-                    <p>Important information about this conceptual demonstration</p>
-                </div>
-                
-                <div class="legal-grid">
-                    <div class="legal-card">
-                        <div class="legal-icon">
-                            <i class="fas fa-user-md"></i>
-                        </div>
-                        <h3>Medical Services Disclaimer</h3>
-                        <p>Adzentura is a conceptual demonstration only and does not provide medical services, mental health treatment, or crisis intervention. This is not a functioning healthcare platform.</p>
-                    </div>
-                    
-                    <div class="legal-card">
-                        <div class="legal-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <h3>Privacy & Data Security</h3>
-                        <p>This demonstration platform does not collect, store, or process any personal or health information. All user interactions are simulated for demonstration purposes.</p>
-                    </div>
-                    
-                    <div class="legal-card">
-                        <div class="legal-icon">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <h3>Provider Relationships</h3>
-                        <p>No real healthcare providers are associated with this demonstration. Any provider information displayed is entirely fictional and for illustrative purposes only.</p>
-                    </div>
-                    
-                    <div class="legal-card">
-                        <div class="legal-icon">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <h3>Emergency Services</h3>
-                        <p>This platform cannot respond to emergencies. In crisis situations, always contact local emergency services or appropriate crisis hotlines.</p>
-                    </div>
-                </div>
-                
-                <div class="compliance-status">
-                    <h4>Legal Compliance Status: CONCEPT DEMONSTRATION ONLY</h4>
-                    <p>This platform is a conceptual design demonstration and has not implemented the legal, regulatory, and compliance measures required for operating an actual healthcare service.</p>
-                    <div class="compliance-list">
-                        <div class="compliance-item not-implemented">
-                            <i class="fas fa-times-circle"></i>
-                            <span>HIPAA Compliance Infrastructure</span>
-                        </div>
-                        <div class="compliance-item not-implemented">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Healthcare Provider Verification</span>
-                        </div>
-                        <div class="compliance-item not-implemented">
-                            <i class="fas fa-times-circle"></i>
-                            <span>Medical Liability Insurance</span>
-                        </div>
-                        <div class="compliance-item not-implemented">
-                            <i class="fas fa-times-circle"></i>
-                            <span>State Healthcare Regulations</span>
+            <!-- Economics Section -->
+            <div class="news-category" data-category="economics">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Economic News</h2>
+                <div class="grid">
+                    <!-- Economics Card 1 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Inflation" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Economic Digest</span>
+                                <span class="credibility-score score-high">87% Credible</span>
+                            </div>
+                            <h3 class="card-title">Inflation Shows Signs of Cooling as Fed Holds Rates</h3>
+                            <p class="card-analysis">Government economic data supports core claims. Expert analysis aligns with mainstream economic consensus.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.2/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">13/15 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Data-focused)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-chart-line"></i> Data Verified</div>
+                                <div class="badge verified"><i class="fas fa-university"></i> Expert Consensus</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </main>
 
-        <!-- Footer -->
+                    <!-- Economics Card 2 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Housing" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Market Watch</span>
+                                <span class="credibility-score score-medium">74% Credible</span>
+                            </div>
+                            <h3 class="card-title">Housing Market Correction Underway as Prices Drop 8%</h3>
+                            <p class="card-analysis">Regional data varies significantly. National averages accurately reported but some local claims exaggerated.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Medium (3.7/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">10/14 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Moderate (Alarmist tone)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge partial"><i class="fas fa-exclamation-triangle"></i> Regional Variation</div>
+                                <div class="badge verified"><i class="fas fa-home"></i> Core Data Accurate</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Economics Card 3 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stocks" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Financial Times</span>
+                                <span class="credibility-score score-high">92% Credible</span>
+                            </div>
+                            <h3 class="card-title">Tech Stocks Rally Amid AI Investment Boom</h3>
+                            <p class="card-analysis">Market data and corporate earnings reports support claims. Analysis aligns with SEC filings and official statements.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.6/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">17/18 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Fact-based)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-chart-bar"></i> Market Data</div>
+                                <div class="badge verified"><i class="fas fa-file-invoice"></i> SEC Filings</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Economics Card 4 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Employment" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Labor Statistics</span>
+                                <span class="credibility-score score-high">88% Credible</span>
+                            </div>
+                            <h3 class="card-title">Unemployment Rate Drops to 3.8% as Job Growth Continues</h3>
+                            <p class="card-analysis">BLS data accurately reported. Methodology properly explained. Regional variations appropriately noted.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.4/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">15/16 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Statistical focus)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-user-check"></i> BLS Data</div>
+                                <div class="badge verified"><i class="fas fa-calculator"></i> Methodology Sound</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Economics Card 5 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Crypto" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Crypto Daily</span>
+                                <span class="credibility-score score-low">38% Credible</span>
+                            </div>
+                            <h3 class="card-title">Bitcoin Predicted to Hit $100,000 by Year End</h3>
+                            <p class="card-analysis">Predictions based on speculative analysis rather than fundamentals. Historical accuracy of source is poor.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Low (1.9/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">2/9 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">High (Promotional content)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge unverified"><i class="fas fa-chart-line"></i> Speculative</div>
+                                <div class="badge unverified"><i class="fas fa-history"></i> Poor Track Record</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Legal Affairs Section -->
+            <div class="news-category" data-category="legal">
+                <h2 class="section-title"><i class="fas fa-gavel"></i> Legal Affairs</h2>
+                <div class="grid">
+                    <!-- Legal Card 1 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Epstein Case" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Legal Times</span>
+                                <span class="credibility-score score-high">86% Credible</span>
+                            </div>
+                            <h3 class="card-title">Epstein Case Documents to Be Fully Unsealed by Court Order</h3>
+                            <p class="card-analysis">Court documents and judicial orders support timeline. Legal experts confirm procedural accuracy.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.3/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">12/14 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Legal reporting)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-file-contract"></i> Court Documents</div>
+                                <div class="badge verified"><i class="fas fa-balance-scale"></i> Legal Accuracy</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legal Card 2 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Trump Legal" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Judicial Watch</span>
+                                <span class="credibility-score score-medium">71% Credible</span>
+                            </div>
+                            <h3 class="card-title">Trump Organization Faces New Fraud Allegations</h3>
+                            <p class="card-analysis">Some court filings verified, but key claims rely on unnamed sources. Legal precedent analysis is accurate.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Medium (3.6/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">8/12 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Moderate (Political framing)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge partial"><i class="fas fa-user-secret"></i> Anonymous Sources</div>
+                                <div class="badge verified"><i class="fas fa-scale-balanced"></i> Legal Analysis Sound</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional legal cards would continue here -->
+                    <!-- Legal Card 3 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Class Action" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Class Action Monitor</span>
+                                <span class="credibility-score score-high">89% Credible</span>
+                            </div>
+                            <h3 class="card-title">Major Tech Company Settles Privacy Class Action for $350M</h3>
+                            <p class="card-analysis">Settlement documents and court approvals verified. Plaintiff statements cross-referenced with court filings.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.4/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">14/15 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Fact-based)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-file-signature"></i> Settlement Verified</div>
+                                <div class="badge verified"><i class="fas fa-users"></i> Plaintiff Data</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legal Card 4 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1584596849839-fc6e0e0e2a14?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Supreme Court" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">SCOTUS Blog</span>
+                                <span class="credibility-score score-high">93% Credible</span>
+                            </div>
+                            <h3 class="card-title">Supreme Court Rules on Key Environmental Regulation Case</h3>
+                            <p class="card-analysis">Opinion analysis aligns with legal experts. Historical context properly cited. Dissenting opinions accurately represented.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">High (4.7/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">16/17 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Minimal (Academic analysis)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge verified"><i class="fas fa-gavel"></i> Opinion Analysis</div>
+                                <div class="badge verified"><i class="fas fa-graduation-cap"></i> Expert Consensus</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Legal Card 5 -->
+                    <div class="news-card">
+                        <img src="https://images.unsplash.com/photo-1566842600175-97dca3c5adef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Criminal Justice" class="card-image">
+                        <div class="card-content">
+                            <div class="card-source">
+                                <span class="source-name">Justice Reform</span>
+                                <span class="credibility-score score-medium">65% Credible</span>
+                            </div>
+                            <h3 class="card-title">New Evidence Emerges in Decades-Old Cold Case</h3>
+                            <p class="card-analysis">Forensic claims require independent verification. Some procedural details conflict with official records.</p>
+                            
+                            <div class="analysis-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Source Reliability:</span>
+                                    <span class="detail-value">Medium (3.3/5)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Fact Verification:</span>
+                                    <span class="detail-value">6/11 claims verified</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Bias Detection:</span>
+                                    <span class="detail-value">Moderate (Sensationalist)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="verification-badges">
+                                <div class="badge partial"><i class="fas fa-microscope"></i> Forensics Unverified</div>
+                                <div class="badge partial"><i class="fas fa-clipboard-check"></i> Partial Records</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional sections for Technology and International would continue here -->
+        </section>
+
         <footer>
             <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Concept Demonstration</h3>
-                    <ul>
-                        <li><a href="#">Demo Overview</a></li>
-                        <li><a href="#">Feature Showcase</a></li>
-                        <li><a href="#">Technical Details</a></li>
+                <div class="footer-section">
+                    <h3>Adzentura</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Methodology</a></li>
+                        <li><a href="#">Research Team</a></li>
+                        <li><a href="#">Careers</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Legal Information</h3>
-                    <ul>
-                        <li><a href="#">Medical Disclaimers</a></li>
-                        <li><a href="#">Privacy Information</a></li>
-                        <li><a href="#">Terms of Demo Use</a></li>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Media Literacy Guide</a></li>
+                        <li><a href="#">Source Database</a></li>
+                        <li><a href="#">Fact-Checking Tools</a></li>
+                        <li><a href="#">Educational Materials</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Real Mental Health Resources</h3>
-                    <ul>
-                        <li><a href="#">Crisis Hotlines</a></li>
-                        <li><a href="#">Finding Real Help</a></li>
-                        <li><a href="#">Emergency Services</a></li>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Transparency Report</a></li>
+                        <li><a href="#">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2023 Adzentura Concept Demonstration. This is not a real healthcare service.</p>
-                <div class="credits">
-                    <p>Developed by Dylan Castro | Endorsed by Jemway</p>
-                </div>
+            <div class="disclaimer">
+                <p>Adzentura provides analytical assessments based on available information and verification methodologies. All content is for informational purposes only. Users should consult multiple sources and exercise critical thinking when evaluating information. Adzentura does not guarantee absolute accuracy and is not liable for decisions made based on its analysis.</p>
             </div>
         </footer>
     </div>
 
     <script>
-        // Handle intro screen transition
         document.addEventListener('DOMContentLoaded', function() {
-            const introScreen = document.getElementById('demo-intro');
-            const mainApp = document.getElementById('main-app');
-            
-            setTimeout(function() {
-                introScreen.style.opacity = '0';
+            const loadingScreen = document.getElementById('loading-screen');
+            const loginScreen = document.getElementById('login-screen');
+            const mainInterface = document.getElementById('main-interface');
+            const passwordInput = document.getElementById('password-input');
+            const loginBtn = document.getElementById('login-btn');
+            const correctPassword = "NFTAEDC";
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const newsCategories = document.querySelectorAll('.news-category');
+
+            // Simulate loading process
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.visibility = 'hidden';
                 
-                setTimeout(function() {
-                    introScreen.style.display = 'none';
-                    mainApp.style.display = 'block';
+                setTimeout(() => {
+                    loginScreen.style.opacity = '1';
+                    loginScreen.style.visibility = 'visible';
+                }, 800);
+            }, 3500);
+
+            loginBtn.addEventListener('click', function() {
+                if (passwordInput.value === correctPassword) {
+                    // Animate login screen out
+                    loginScreen.style.opacity = '0';
+                    loginScreen.style.visibility = 'hidden';
                     
-                    setTimeout(function() {
-                        mainApp.style.opacity = '1';
-                        
-                        // Add animation classes to elements
-                        document.querySelectorAll('.animate-in').forEach((el, index) => {
-                            el.style.animationDelay = `${index * 0.1}s`;
-                        });
-                    }, 50);
-                }, 1500);
-            }, 4500);
-        });
-
-        // Demo functionality
-        document.querySelectorAll('.feature-btn, .btn-book, .btn-details, .search-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('This is a demonstration feature. In a real platform, this would perform the intended action.');
+                    setTimeout(() => {
+                        mainInterface.style.display = 'block';
+                        setTimeout(() => {
+                            mainInterface.style.opacity = '1';
+                        }, 50);
+                    }, 500);
+                } else {
+                    passwordInput.style.borderColor = 'var(--accent)';
+                    passwordInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
             });
-        });
 
-        function toggleAdminPanel() {
-            alert('Demo Controls: This would open administrative functions in a real platform.');
-        }
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+
+            // Category filtering functionality
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Show/hide categories based on selection
+                    newsCategories.forEach(categoryElement => {
+                        if (category === 'all' || categoryElement.getAttribute('data-category') === category) {
+                            categoryElement.style.display = 'block';
+                        } else {
+                            categoryElement.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Add shake animation for wrong password
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
     </script>
 </body>
 </html>
