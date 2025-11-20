@@ -6,7 +6,7 @@
     <title>Adzentura | AI News Intelligence</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your complete CSS from before */
+        /* Your complete CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -1041,7 +1041,7 @@
             <div class="live-indicator" id="live-indicator">
                 <div class="pulse-dot"></div>
                 <span>REAL-TIME UPDATES</span>
-                <span class="api-status" id="api-status">GUARDIAN API</span>
+                <span class="api-status" id="api-status">MULTI-SOURCE</span>
             </div>
         </div>
 
@@ -1242,7 +1242,7 @@
     </div>
 
     <script>
-        // API Configuration with your keys
+        // Enhanced API Configuration with multiple RSS sources
         const API_CONFIG = {
             gnewsApi: {
                 key: 'd7ce9e191c4bc11b54d13421c7ce2aaf',
@@ -1251,8 +1251,27 @@
             guardianApi: {
                 key: 'eb844cea-1049-47df-ba37-96b18269dea8',
                 url: 'https://content.guardianapis.com/'
+            },
+            rssFeeds: {
+                bbc: 'https://feeds.bbci.co.uk/news/rss.xml',
+                cnn: 'http://rss.cnn.com/rss/edition.rss',
+                fox: 'https://moxie.foxnews.com/google-publisher/latest.xml',
+                abc: 'https://abcnews.go.com/abcnews/topstories',
+                reuters: 'https://www.reutersagency.com/feed/?best-topics=business-finance&post-type=best',
+                npr: 'https://feeds.npr.org/1001/rss.xml',
+                associatedpress: 'https://www.apnews.com/apf-topnews',
+                bloomberg: 'https://www.bloomberg.com/politics/feeds/site.xml',
+                washingtonpost: 'https://feeds.washingtonpost.com/rss/politics',
+                usatoday: 'https://rssfeeds.usatoday.com/usatoday-news-topstories',
+                nbc: 'https://feeds.nbcnews.com/nbcnews/public/news',
+                cbs: 'https://www.cbsnews.com/latest/rss/main',
+                time: 'https://feeds.feedburner.com/time/topstories',
+                thehill: 'https://thehill.com/news/feed/'
             }
         };
+
+        // RSS-to-JSON proxy service
+        const RSS_PROXY_URL = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
         // System state
         let systemStats = {
@@ -1264,7 +1283,7 @@
             aiAnalysisCount: 0,
             isEmergencyMode: false,
             systemStatus: 'operational',
-            currentApi: 'guardian'
+            currentApi: 'mixed'
         };
 
         let currentCategory = 'breaking';
@@ -1277,17 +1296,17 @@
             { name: 'Reuters', credibility: 94, category: 'general' },
             { name: 'BBC News', credibility: 92, category: 'general' },
             { name: 'CNN', credibility: 88, category: 'general' },
-            { name: 'The New York Times', credibility: 90, category: 'general' },
+            { name: 'Fox News', credibility: 85, category: 'general' },
+            { name: 'ABC News', credibility: 87, category: 'general' },
+            { name: 'NPR', credibility: 91, category: 'general' },
             { name: 'The Guardian', credibility: 89, category: 'general' },
-            { name: 'Al Jazeera', credibility: 87, category: 'international' },
             { name: 'Bloomberg', credibility: 91, category: 'business' },
-            { name: 'TechCrunch', credibility: 85, category: 'technology' },
-            { name: 'Wired', credibility: 86, category: 'technology' },
-            { name: 'The Verge', credibility: 84, category: 'technology' },
-            { name: 'Nature', credibility: 96, category: 'science' },
-            { name: 'Science Magazine', credibility: 95, category: 'science' },
-            { name: 'The Economist', credibility: 92, category: 'economics' },
-            { name: 'Financial Times', credibility: 93, category: 'economics' }
+            { name: 'Washington Post', credibility: 88, category: 'politics' },
+            { name: 'USA Today', credibility: 84, category: 'general' },
+            { name: 'NBC News', credibility: 87, category: 'general' },
+            { name: 'CBS News', credibility: 86, category: 'general' },
+            { name: 'TIME', credibility: 88, category: 'general' },
+            { name: 'The Hill', credibility: 83, category: 'politics' }
         ];
 
         // Initialize the application
@@ -1343,7 +1362,7 @@
             }, 8000);
         }
 
-        // Main news loading function
+        // Main news loading function - ALWAYS mix Guardian + RSS sources
         async function loadNewsForCategory(category) {
             if (systemStats.isEmergencyMode && category !== 'breaking') {
                 category = 'breaking';
@@ -1357,122 +1376,79 @@
             showLoading();
             
             try {
-                let newsData = [];
-                
-                // Get today's date in the required format
+                let allNewsData = [];
                 const today = new Date();
-                const todayFormatted = today.toISOString().split('T')[0]; // YYYY-MM-DD
+                const todayFormatted = today.toISOString().split('T')[0];
                 
-                // Check if we're in emergency mode (5 PM - 9 AM EST)
-                const isEmergencyMode = checkCurrentEmergencyMode();
+                // Set API status to show we're using multiple sources
+                systemStats.currentApi = 'mixed';
+                document.getElementById('api-status').textContent = 'MULTI-SOURCE';
+                document.getElementById('api-status').className = 'api-status';
                 
-                if (isEmergencyMode) {
-                    // During emergency hours, use GNews API for breaking news only
-                    systemStats.currentApi = 'gnews';
-                    document.getElementById('api-status').textContent = 'GNEWS API';
-                    document.getElementById('api-status').className = 'api-status';
-                    
-                    if (category === 'breaking') {
-                        newsData = await fetchBreakingNews(todayFormatted);
-                    } else {
-                        // For other categories during emergency hours, show limited data
-                        newsData = await fetchLimitedNews(category, todayFormatted);
-                    }
-                } else {
-                    // During regular hours, use Guardian API for all categories
-                    systemStats.currentApi = 'guardian';
-                    document.getElementById('api-status').textContent = 'GUARDIAN API';
-                    document.getElementById('api-status').className = 'api-status';
-                    
-                    newsData = await fetchRegularNews(category, todayFormatted);
-                }
+                // Fetch from BOTH Guardian AND RSS sources simultaneously
+                const [guardianNews, rssNews] = await Promise.all([
+                    fetchGuardianNews(category, todayFormatted),
+                    fetchRSSNews(category)
+                ]);
+                
+                // Combine all news sources
+                allNewsData = [...guardianNews, ...rssNews];
+                
+                // Shuffle and limit to 20 articles for better variety
+                allNewsData = shuffleArray(allNewsData).slice(0, 20);
                 
                 // Update system stats
-                systemStats.articlesAnalyzed += newsData.length;
-                const uniqueSources = new Set(newsData.map(n => n.source));
+                systemStats.articlesAnalyzed += allNewsData.length;
+                const uniqueSources = new Set(allNewsData.map(n => n.source));
                 systemStats.sourcesTracked = Math.max(systemStats.sourcesTracked, uniqueSources.size);
                 systemStats.lastUpdate = new Date();
                 
-                updateBreakingBanner(newsData);
-                renderNews(newsData);
+                updateBreakingBanner(allNewsData);
+                renderNews(allNewsData);
                 updateLastUpdatedTime();
                 updateSystemStats();
                 
             } catch (error) {
                 console.error('Error loading news:', error);
-                // Show fallback data if API calls fail
-                const fallbackData = getFallbackNews(category);
-                renderNews(fallbackData);
-                
-                // Show system alert
-                document.getElementById('system-alert').style.display = 'block';
-                document.getElementById('system-alert-message').textContent = 
-                    'Our AI systems are currently experiencing technical difficulties. Basic news functionality remains available.';
-                
-                // Update API status to show error
-                document.getElementById('api-status').textContent = 'API OFFLINE';
-                document.getElementById('api-status').className = 'api-status offline';
+                // Fallback to just RSS if everything fails
+                try {
+                    const rssData = await fetchRSSNews(category);
+                    systemStats.articlesAnalyzed += rssData.length;
+                    renderNews(rssData);
+                    document.getElementById('api-status').textContent = 'RSS ONLY';
+                } catch (rssError) {
+                    console.error('RSS fallback also failed:', rssError);
+                    const fallbackData = getFallbackNews(category);
+                    renderNews(fallbackData);
+                    
+                    document.getElementById('system-alert').style.display = 'block';
+                    document.getElementById('system-alert-message').textContent = 
+                        'Our AI systems are currently experiencing technical difficulties. Basic news functionality remains available.';
+                    
+                    document.getElementById('api-status').textContent = 'API OFFLINE';
+                    document.getElementById('api-status').className = 'api-status offline';
+                }
             } finally {
                 hideLoading();
             }
         }
 
-        // Fetch breaking news using GNews API (emergency hours)
-        async function fetchBreakingNews(date) {
-            systemStats.apiCallsToday++;
-            
+        // Fetch Guardian news specifically
+        async function fetchGuardianNews(category, date) {
             try {
-                // Use GNews API for breaking news
-                const gnewsUrl = `${API_CONFIG.gnewsApi.url}top-headlines?token=${API_CONFIG.gnewsApi.key}&lang=en&max=8`;
-                console.log('Fetching from GNews:', gnewsUrl);
+                systemStats.apiCallsToday++;
                 
-                const response = await fetch(gnewsUrl);
+                const categoryMapping = {
+                    'politics': 'politics',
+                    'technology': 'technology',
+                    'economics': 'business',
+                    'health': 'science',
+                    'breaking': 'news'
+                };
                 
-                if (!response.ok) {
-                    throw new Error(`GNews API request failed: ${response.status}`);
-                }
+                const apiCategory = categoryMapping[category] || 'news';
+                const guardianUrl = `${API_CONFIG.guardianApi.url}search?api-key=${API_CONFIG.guardianApi.key}&section=${apiCategory}&page-size=6&show-fields=thumbnail,trailText&from-date=${date}&to-date=${date}`;
                 
-                const data = await response.json();
-                console.log('GNews response:', data);
-                
-                if (data.articles && data.articles.length > 0) {
-                    return data.articles.map(article => ({
-                        title: article.title,
-                        source: article.source.name,
-                        description: article.description || 'No description available',
-                        image: article.image || getFallbackImage('breaking'),
-                        url: article.url,
-                        credibility: calculateCredibility(article, 'gnews'),
-                        breaking: true,
-                        analysis: generateAnalysis(article, 'gnews'),
-                        publishedAt: article.publishedAt
-                    }));
-                } else {
-                    throw new Error('No articles found in GNews API response');
-                }
-            } catch (error) {
-                console.error('Error fetching from GNews API:', error);
-                throw error;
-            }
-        }
-
-        // Fetch regular news using Guardian API (regular hours)
-        async function fetchRegularNews(category, date) {
-            systemStats.apiCallsToday++;
-            
-            const categoryMapping = {
-                'politics': 'politics',
-                'technology': 'technology',
-                'economics': 'business',
-                'health': 'science',
-                'breaking': 'news'
-            };
-            
-            const apiCategory = categoryMapping[category] || 'news';
-            
-            try {
-                // Use Guardian API for regular news
-                const guardianUrl = `${API_CONFIG.guardianApi.url}search?api-key=${API_CONFIG.guardianApi.key}&section=${apiCategory}&page-size=8&show-fields=thumbnail,trailText&from-date=${date}&to-date=${date}`;
                 console.log('Fetching from Guardian:', guardianUrl);
                 
                 const response = await fetch(guardianUrl);
@@ -1482,7 +1458,6 @@
                 }
                 
                 const data = await response.json();
-                console.log('Guardian response:', data);
                 
                 if (data.response && data.response.results) {
                     return data.response.results.map(article => ({
@@ -1491,95 +1466,185 @@
                         description: article.fields?.trailText || 'No description available',
                         image: article.fields?.thumbnail || getFallbackImage(category),
                         url: article.webUrl,
-                        credibility: calculateCredibility(article, 'guardian'),
+                        credibility: calculateGuardianCredibility(article),
                         breaking: category === 'breaking',
                         analysis: generateGuardianAnalysis(article),
                         publishedAt: article.webPublicationDate
                     }));
-                } else {
-                    throw new Error('No articles found in Guardian API response');
                 }
+                return [];
             } catch (error) {
                 console.error('Error fetching from Guardian API:', error);
-                throw error;
+                return []; // Return empty array instead of throwing
             }
         }
 
-        // Fetch limited news during emergency hours for non-breaking categories
-        async function fetchLimitedNews(category, date) {
-            // During emergency hours, non-breaking categories get limited data
-            return [{
-                title: `Limited ${getCategoryDisplayName(category)} Coverage`,
-                source: 'Adzentura AI',
-                description: 'During emergency hours (5 PM - 9 AM EST), we focus on breaking news. Full coverage will resume at 9 AM EST.',
-                image: getFallbackImage(category),
-                url: '#',
-                credibility: 90,
-                breaking: false,
-                analysis: {
-                    crossVerification: "Emergency mode active",
-                    factuality: "Limited coverage available",
-                    biasDetection: "Standard monitoring",
-                    timeliness: "Emergency hours protocol",
-                    summary: "Limited data during emergency hours"
-                },
-                publishedAt: new Date().toISOString()
-            }];
+        // Fetch RSS news from multiple sources
+        async function fetchRSSNews(category) {
+            console.log('Fetching RSS news from multiple sources for category:', category);
+            
+            const categoryMapping = {
+                'breaking': ['bbc', 'cnn', 'fox', 'abc', 'reuters', 'associatedpress'],
+                'politics': ['bbc', 'cnn', 'fox', 'thehill', 'washingtonpost', 'npr'],
+                'technology': ['bbc', 'cnn', 'reuters', 'bloomberg'],
+                'economics': ['reuters', 'bloomberg', 'bbc', 'cnn'],
+                'health': ['bbc', 'npr', 'abc', 'reuters']
+            };
+            
+            const feedsToUse = categoryMapping[category] || ['bbc', 'cnn', 'reuters', 'associatedpress'];
+            let allArticles = [];
+            
+            const fetchPromises = feedsToUse.map(feedName => 
+                fetchSingleRSSFeed(API_CONFIG.rssFeeds[feedName], formatSourceName(feedName))
+            );
+            
+            const results = await Promise.allSettled(fetchPromises);
+            
+            results.forEach(result => {
+                if (result.status === 'fulfilled' && result.value) {
+                    allArticles = allArticles.concat(result.value);
+                }
+            });
+            
+            return allArticles.slice(0, 14); // Limit RSS to 14 articles
         }
 
-        // Calculate credibility score based on article properties (0-100 scale)
-        function calculateCredibility(article, apiType) {
-            let score = 70; // Base score
+        // Helper function to shuffle array (for variety)
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Fetch single RSS feed
+        async function fetchSingleRSSFeed(feedUrl, sourceName) {
+            try {
+                const response = await fetch(`${RSS_PROXY_URL}${encodeURIComponent(feedUrl)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`RSS fetch failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.items && data.items.length > 0) {
+                    return data.items.map(item => ({
+                        title: item.title,
+                        source: sourceName,
+                        description: stripHtmlTags(item.description || 'No description available'),
+                        image: item.enclosure?.link || getImageFromDescription(item.description) || getFallbackImage('breaking'),
+                        url: item.link,
+                        credibility: calculateRssCredibility(sourceName, item),
+                        breaking: isBreakingNews(item),
+                        analysis: generateRSSAnalysis(item, sourceName),
+                        publishedAt: item.pubDate
+                    }));
+                }
+                return [];
+            } catch (error) {
+                console.error(`Error fetching RSS from ${sourceName}:`, error);
+                return [];
+            }
+        }
+
+        // Helper function to format source names
+        function formatSourceName(feedKey) {
+            const nameMap = {
+                'bbc': 'BBC News',
+                'cnn': 'CNN',
+                'fox': 'Fox News',
+                'abc': 'ABC News',
+                'reuters': 'Reuters',
+                'npr': 'NPR',
+                'associatedpress': 'Associated Press',
+                'bloomberg': 'Bloomberg',
+                'washingtonpost': 'Washington Post',
+                'usatoday': 'USA Today',
+                'nbc': 'NBC News',
+                'cbs': 'CBS News',
+                'time': 'TIME',
+                'thehill': 'The Hill'
+            };
+            return nameMap[feedKey] || feedKey.toUpperCase();
+        }
+
+        // Strip HTML tags from descriptions
+        function stripHtmlTags(html) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return tmp.textContent || tmp.innerText || '';
+        }
+
+        // Extract image from RSS description
+        function getImageFromDescription(description) {
+            const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
+            return imgMatch ? imgMatch[1] : null;
+        }
+
+        // Calculate credibility for RSS sources
+        function calculateRssCredibility(sourceName, item) {
+            const credibilityScores = {
+                'BBC News': 92,
+                'Reuters': 94,
+                'Associated Press': 95,
+                'NPR': 91,
+                'ABC News': 87,
+                'CNN': 88,
+                'Fox News': 85,
+                'Bloomberg': 91,
+                'Washington Post': 88,
+                'NBC News': 87,
+                'CBS News': 86,
+                'TIME': 88,
+                'The Hill': 83,
+                'USA Today': 84
+            };
             
-            if (apiType === 'guardian') {
-                // Guardian articles get higher base credibility
-                score = 85;
-                
-                // Additional factors for Guardian
-                if (article.fields?.trailText && article.fields.trailText.length > 100) {
-                    score += 5;
-                }
-                
-                if (article.fields?.thumbnail) {
-                    score += 5;
-                }
-                
-                // Section-based credibility adjustments
-                const highCredibilitySections = ['news', 'politics', 'science'];
-                if (highCredibilitySections.includes(article.sectionId)) {
-                    score += 3;
-                }
-            } else {
-                // GNews credibility calculation
-                const reputableSources = ['Reuters', 'Associated Press', 'BBC News'];
-                if (reputableSources.includes(article.source?.name)) {
-                    score += 15;
-                }
-                
-                // Content indicators
-                if (article.description && article.description.length > 100) {
-                    score += 5;
-                }
-                
-                if (article.image) {
-                    score += 5;
-                }
-                
-                if (article.content) {
-                    score += 5;
-                }
+            let score = credibilityScores[sourceName] || 80;
+            
+            // Adjust based on content quality
+            if (item.description && item.description.length > 100) score += 5;
+            if (item.enclosure?.link) score += 5;
+            
+            return Math.min(score, 100);
+        }
+
+        // Calculate credibility specifically for Guardian
+        function calculateGuardianCredibility(article) {
+            let score = 85; // Base Guardian score
+            
+            if (article.fields?.trailText && article.fields.trailText.length > 100) {
+                score += 5;
             }
             
-            // Ensure score is between 0 and 100
-            return Math.min(Math.max(score, 0), 100);
+            if (article.fields?.thumbnail) {
+                score += 5;
+            }
+            
+            const highCredibilitySections = ['news', 'politics', 'science'];
+            if (highCredibilitySections.includes(article.sectionId)) {
+                score += 3;
+            }
+            
+            return Math.min(score, 100);
         }
 
-        // Generate analysis for GNews API articles
-        function generateAnalysis(article, apiType) {
-            const credibility = calculateCredibility(article, apiType);
+        // Check if RSS item is breaking news
+        function isBreakingNews(item) {
+            const breakingKeywords = ['breaking', 'urgent', 'developing', 'crisis', 'emergency'];
+            const text = (item.title + ' ' + item.description).toLowerCase();
+            return breakingKeywords.some(keyword => text.includes(keyword));
+        }
+
+        // Generate analysis for RSS items
+        function generateRSSAnalysis(item, sourceName) {
+            const credibility = calculateRssCredibility(sourceName, item);
             
             return {
-                crossVerification: "Multiple source verification",
+                crossVerification: "Multiple source monitoring",
                 factuality: `${credibility}% factual accuracy`,
                 biasDetection: "Standard media bias analysis",
                 timeliness: "Recent news coverage",
@@ -1589,7 +1654,7 @@
 
         // Generate analysis for Guardian API articles
         function generateGuardianAnalysis(article) {
-            const credibility = calculateCredibility(article, 'guardian');
+            const credibility = calculateGuardianCredibility(article);
             
             return {
                 crossVerification: "Editorial review process",
@@ -1639,7 +1704,6 @@
                 
                 const verificationBadges = generateVerificationBadges(news.credibility);
                 
-                // Format date for display
                 const publishedDate = new Date(news.publishedAt);
                 const formattedDate = publishedDate.toLocaleDateString('en-US', {
                     month: 'short',
@@ -1681,7 +1745,6 @@
                     </div>
                 `;
                 
-                // Add click handler to open article
                 newsCard.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (news.url && news.url !== '#') {
@@ -1780,7 +1843,7 @@
         function setupAutoUpdates() {
             autoUpdateInterval = setInterval(() => {
                 loadNewsForCategory(currentCategory);
-            }, 300000); // Update every 5 minutes
+            }, 300000);
         }
 
         function setupEventListeners() {
