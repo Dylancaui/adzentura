@@ -6,7 +6,6 @@
     <title>Adzentura | AI News Intelligence</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Your complete CSS remains the same */
         * {
             margin: 0;
             padding: 0;
@@ -1623,7 +1622,7 @@
     </div>
 
     <script>
-        // Enhanced API Configuration with multiple RSS sources and Finhub
+        // Enhanced API Configuration with ALL APIs including ScraperAPI
         const API_CONFIG = {
             gnewsApi: {
                 key: 'd7ce9e191c4bc11b54d13421c7ce2aaf',
@@ -1636,6 +1635,10 @@
             finhubApi: {
                 key: 'd4fp421r01qgiiemlrq0d4fp421r01qgiiemlrqg',
                 url: 'https://finnhub.io/api/v1/'
+            },
+            scraperApi: {
+                key: 'c6500994cbc66654f8748cbd8953a09f',
+                url: 'http://api.scraperapi.com'
             },
             rssFeeds: {
                 bbc: 'https://feeds.bbci.co.uk/news/rss.xml',
@@ -1655,6 +1658,39 @@
             }
         };
 
+        // Additional websites to scrape (beyond RSS)
+        const SCRAPER_SOURCES = {
+            breaking: [
+                'https://www.cnn.com',
+                'https://www.foxnews.com',
+                'https://www.nbcnews.com'
+            ],
+            politics: [
+                'https://thehill.com',
+                'https://www.politico.com'
+            ],
+            technology: [
+                'https://techcrunch.com',
+                'https://www.theverge.com'
+            ],
+            economics: [
+                'https://www.bloomberg.com',
+                'https://www.cnbc.com'
+            ],
+            health: [
+                'https://www.medicalnewstoday.com',
+                'https://www.healthline.com'
+            ]
+        };
+
+        // Financial news RSS feeds
+        const FINANCE_RSS_FEEDS = {
+            bloomberg: 'https://www.bloomberg.com/markets/rss',
+            reuters: 'https://www.reutersagency.com/feed/?best-topics=business-finance&post-type=best',
+            marketWatch: 'https://feeds.content.dowjones.io/public/rss/mw_business',
+            cnbc: 'https://www.cnbc.com/id/10000664/device/rss/rss.html'
+        };
+
         // RSS-to-JSON proxy service
         const RSS_PROXY_URL = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
@@ -1665,16 +1701,6 @@
             finance: ['JPM', 'BAC', 'WFC', 'GS', 'MS', 'C', 'AXP', 'V', 'MA', 'PYPL', 'SQ', 'SCHW', 'BLK', 'BX', 'KKR', 'APO', 'COF', 'DFS', 'ALLY', 'AON'],
             healthcare: ['JNJ', 'PFE', 'UNH', 'MRK', 'ABT', 'TMO', 'LLY', 'AMGN', 'GILD', 'BMY', 'CVS', 'CI', 'ANTM', 'DHR', 'SYK', 'BDX', 'ISRG', 'VRTX', 'REGN', 'ZTS'],
             energy: ['XOM', 'CVX', 'COP', 'SLB', 'EOG', 'PSX', 'MPC', 'VLO', 'OXY', 'HAL', 'KMI', 'WMB', 'OKE', 'APA', 'DVN', 'FANG', 'HES', 'MRO', 'PXD', 'EQT']
-        };
-
-        // Financial news RSS feeds
-        const FINANCE_RSS_FEEDS = {
-            bloomberg: 'https://www.bloomberg.com/markets/rss',
-            reuters: 'https://www.reutersagency.com/feed/?best-topics=business-finance&post-type=best',
-            financialTimes: 'https://www.ft.com/?format=rss',
-            marketWatch: 'https://feeds.content.dowjones.io/public/rss/mw_business',
-            cnbc: 'https://www.cnbc.com/id/10000664/device/rss/rss.html',
-            yahoo: 'https://finance.yahoo.com/news/rssindex'
         };
 
         // System state
@@ -1767,7 +1793,7 @@
             }, 8000);
         }
 
-        // Main news loading function - ALWAYS mix Guardian + RSS sources
+        // Main news loading function - ALL APIs including ScraperAPI
         async function loadNewsForCategory(category) {
             if (systemStats.isEmergencyMode && category !== 'breaking') {
                 category = 'breaking';
@@ -1783,25 +1809,26 @@
             try {
                 let allNewsData = [];
                 
-                // Set API status to show we're using multiple sources
-                systemStats.currentApi = 'mixed';
-                document.getElementById('api-status').textContent = 'MULTI-SOURCE';
+                // Set API status to show we're using multiple sources including scraping
+                systemStats.currentApi = 'mixed-plus-scraping';
+                document.getElementById('api-status').textContent = 'MULTI-SOURCE+SCRAPING';
                 document.getElementById('api-status').className = 'api-status';
                 
-                // Fetch from BOTH Guardian AND RSS sources simultaneously
-                const [guardianNews, rssNews] = await Promise.all([
+                // Fetch from ALL sources simultaneously
+                const [guardianNews, rssNews, scrapedNews] = await Promise.all([
                     fetchGuardianNews(category),
-                    fetchRSSNews(category)
+                    fetchRSSNews(category),
+                    scrapeNewsSources(category)
                 ]);
                 
                 // Combine all news sources
-                allNewsData = [...guardianNews, ...rssNews];
+                allNewsData = [...guardianNews, ...rssNews, ...scrapedNews];
                 
                 // Filter to current week's news
                 allNewsData = filterNewsByCurrentWeek(allNewsData);
                 
-                // Shuffle and limit to 20 articles for better variety
-                allNewsData = shuffleArray(allNewsData).slice(0, 20);
+                // Shuffle and limit to 24 articles for better variety
+                allNewsData = shuffleArray(allNewsData).slice(0, 24);
                 
                 // Update system stats
                 systemStats.articlesAnalyzed += allNewsData.length;
@@ -1837,6 +1864,136 @@
             } finally {
                 hideLoading();
             }
+        }
+
+        // ScraperAPI function to extract news from websites
+        async function scrapeNewsSources(category) {
+            const sources = SCRAPER_SOURCES[category] || SCRAPER_SOURCES.breaking;
+            let allScrapedArticles = [];
+            
+            // Limit to 2 sources to avoid hitting API limits
+            const sourcesToScrape = sources.slice(0, 2);
+            
+            for (const sourceUrl of sourcesToScrape) {
+                try {
+                    console.log(`Scraping: ${sourceUrl}`);
+                    const articles = await scrapeWebsite(sourceUrl, category);
+                    if (articles && articles.length > 0) {
+                        allScrapedArticles = [...allScrapedArticles, ...articles];
+                    }
+                } catch (error) {
+                    console.error(`Failed to scrape ${sourceUrl}:`, error);
+                }
+            }
+            
+            return allScrapedArticles.slice(0, 6); // Limit to 6 articles
+        }
+
+        // Individual website scraper
+        async function scrapeWebsite(url, category) {
+            try {
+                const scraperUrl = `${API_CONFIG.scraperApi.url}/?api_key=${API_CONFIG.scraperApi.key}&url=${encodeURIComponent(url)}&render=true`;
+                
+                const response = await fetch(scraperUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`ScraperAPI request failed: ${response.status}`);
+                }
+                
+                const html = await response.text();
+                return parseScrapedContent(html, url, category);
+                
+            } catch (error) {
+                console.error(`ScraperAPI error for ${url}:`, error);
+                return [];
+            }
+        }
+
+        // Basic HTML parser for news content
+        function parseScrapedContent(html, sourceUrl, category) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            const articles = [];
+            
+            // Look for common article selectors
+            const articleSelectors = [
+                'article',
+                '.article',
+                '.story',
+                '.news-item',
+                '.post',
+                '[role="article"]'
+            ];
+            
+            const articleElements = doc.querySelectorAll(articleSelectors.join(', '));
+            
+            articleElements.forEach((element, index) => {
+                if (index >= 5) return; // Limit to 5 articles per site
+                
+                const titleElement = element.querySelector('h1, h2, h3, .title, .headline');
+                const descriptionElement = element.querySelector('p, .description, .summary');
+                const imageElement = element.querySelector('img');
+                
+                if (titleElement && titleElement.textContent.trim()) {
+                    const title = titleElement.textContent.trim();
+                    const description = descriptionElement ? 
+                        descriptionElement.textContent.trim().substring(0, 200) + '...' : 
+                        'Article content extracted via AI scraping';
+                    
+                    const image = imageElement ? 
+                        imageElement.src : 
+                        getFallbackImage(category);
+                    
+                    // Extract domain name for source
+                    const domain = new URL(sourceUrl).hostname.replace('www.', '');
+                    
+                    articles.push({
+                        title: title,
+                        source: domain.charAt(0).toUpperCase() + domain.slice(1),
+                        description: description,
+                        image: image,
+                        url: sourceUrl,
+                        credibility: calculateScraperCredibility(domain),
+                        breaking: isBreakingNews({title: title, description: description}),
+                        analysis: generateScraperAnalysis(domain),
+                        publishedAt: new Date().toISOString(),
+                        crossReferences: generateCrossReferences(title),
+                        isScraped: true
+                    });
+                }
+            });
+            
+            return articles;
+        }
+
+        // Calculate credibility for scraped sources
+        function calculateScraperCredibility(domain) {
+            const credibilityScores = {
+                'cnn.com': 88,
+                'foxnews.com': 85,
+                'nbcnews.com': 87,
+                'thehill.com': 83,
+                'politico.com': 86,
+                'techcrunch.com': 84,
+                'theverge.com': 83,
+                'bloomberg.com': 91,
+                'medicalnewstoday.com': 82,
+                'healthline.com': 81
+            };
+            
+            return credibilityScores[domain] || 80;
+        }
+
+        // Generate analysis for scraped articles
+        function generateScraperAnalysis(domain) {
+            return {
+                crossVerification: "AI web scraping analysis",
+                factuality: `${calculateScraperCredibility(domain)}% factual accuracy`,
+                biasDetection: "Automated content analysis",
+                timeliness: "Real-time content extraction",
+                summary: "Direct source monitoring"
+            };
         }
 
         // Filter news to only show current week's articles
@@ -1895,7 +2052,7 @@
                 return [];
             } catch (error) {
                 console.error('Error fetching from Guardian API:', error);
-                return []; // Return empty array instead of throwing
+                return [];
             }
         }
 
@@ -1926,7 +2083,7 @@
                 }
             });
             
-            return allArticles.slice(0, 14); // Limit RSS to 14 articles
+            return allArticles.slice(0, 14);
         }
 
         // Helper function to shuffle array (for variety)
@@ -1975,7 +2132,7 @@
         function generateCrossReferences(title) {
             const sources = ['Reuters', 'Associated Press', 'BBC News', 'CNN', 'The New York Times'];
             const shuffled = [...sources].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 2); // Return 2 random sources
+            return shuffled.slice(0, 2);
         }
 
         // Helper function to format source names
@@ -2042,7 +2199,7 @@
 
         // Calculate credibility specifically for Guardian
         function calculateGuardianCredibility(article) {
-            let score = 85; // Base Guardian score
+            let score = 85;
             
             if (article.fields?.trailText && article.fields.trailText.length > 100) {
                 score += 5;
@@ -2063,7 +2220,7 @@
         // Check if RSS item is breaking news
         function isBreakingNews(item) {
             const breakingKeywords = ['breaking', 'urgent', 'developing', 'crisis', 'emergency'];
-            const text = (item.title + ' ' + item.description).toLowerCase();
+            const text = (item.title + ' ' + (item.description || '')).toLowerCase();
             return breakingKeywords.some(keyword => text.includes(keyword));
         }
 
@@ -2140,6 +2297,9 @@
                     minute: '2-digit'
                 });
                 
+                // Add scraped badge if applicable
+                const scrapedBadge = news.isScraped ? '<div class="badge partial"><i class="fas fa-robot"></i> AI Scraped</div>' : '';
+                
                 newsCard.innerHTML = `
                     <img src="${news.image}" alt="${news.title}" class="card-image" onerror="this.src='${getFallbackImage(currentCategory)}'">
                     <div class="card-content">
@@ -2169,6 +2329,7 @@
                         </div>
                         <div class="verification-badges">
                             ${verificationBadges}
+                            ${scrapedBadge}
                         </div>
                     </div>
                 `;
@@ -2347,7 +2508,7 @@
                 return financeKeywords.some(keyword => text.includes(keyword));
             });
             
-            return filteredArticles.slice(0, 6); // Limit to 6 articles
+            return filteredArticles.slice(0, 6);
         }
 
         // Update market status indicator
