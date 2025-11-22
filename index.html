@@ -277,7 +277,7 @@
             border-radius: 2px;
         }
 
-        /* Search Bar */
+        /* Enhanced Search Bar */
         .search-container {
             position: relative;
             margin: 1.5rem 3rem;
@@ -315,7 +315,7 @@
             font-size: 1.2rem;
         }
 
-        /* Search Suggestions */
+        /* Enhanced Search Suggestions */
         .search-suggestions {
             position: absolute;
             top: 100%;
@@ -326,9 +326,10 @@
             border-radius: 0 0 15px 15px;
             backdrop-filter: blur(10px);
             z-index: 100;
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .search-suggestions.active {
@@ -340,6 +341,9 @@
             cursor: pointer;
             transition: var(--transition);
             border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .suggestion-item:hover {
@@ -350,9 +354,59 @@
             border-bottom: none;
         }
 
+        .suggestion-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .suggestion-title {
+            font-weight: 600;
+            color: var(--light);
+            margin-bottom: 0.2rem;
+        }
+
+        .suggestion-description {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
         .suggestion-highlight {
             color: var(--primary);
             font-weight: 600;
+        }
+
+        .suggestion-type {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .suggestion-type.source {
+            background: rgba(0, 216, 167, 0.1);
+            color: var(--accent2);
+            border-color: rgba(0, 216, 167, 0.2);
+        }
+
+        .suggestion-type.topic {
+            background: rgba(255, 45, 117, 0.1);
+            color: var(--accent);
+            border-color: rgba(255, 45, 117, 0.2);
+        }
+
+        .suggestion-item.active {
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
         }
 
         /* Page Content */
@@ -1803,11 +1857,13 @@
             </nav>
         </header>
 
-        <!-- Search Bar -->
+        <!-- Enhanced Search Bar -->
         <div class="search-container">
-            <input type="text" class="search-box" id="search-box" placeholder="Search for news, topics, or sources...">
+            <input type="text" class="search-box" id="search-box" placeholder="Search for news, topics, sources, or ask questions...">
             <i class="fas fa-search search-icon"></i>
-            <div class="search-suggestions" id="search-suggestions"></div>
+            <div class="search-suggestions" id="search-suggestions">
+                <!-- Suggestions will appear here -->
+            </div>
         </div>
 
         <!-- Breaking News Banner -->
@@ -2054,7 +2110,195 @@
     </div>
 
     <script>
-        // Enhanced API Configuration with 50+ news sources
+        // Enhanced Search Data
+        const SEARCH_DATA = {
+            sources: [
+                { name: 'Fox News', description: 'Conservative news network', type: 'source' },
+                { name: 'CNN', description: 'Cable news network', type: 'source' },
+                { name: 'BBC News', description: 'British public service broadcaster', type: 'source' },
+                { name: 'Reuters', description: 'International news organization', type: 'source' },
+                { name: 'Associated Press', description: 'American non-profit news agency', type: 'source' },
+                { name: 'New York Times', description: 'American newspaper', type: 'source' },
+                { name: 'Washington Post', description: 'American newspaper', type: 'source' },
+                { name: 'The Guardian', description: 'British newspaper', type: 'source' },
+                { name: 'Bloomberg', description: 'Financial news and media', type: 'source' },
+                { name: 'Al Jazeera', description: 'Qatari state-owned news network', type: 'source' }
+            ],
+            topics: [
+                { name: 'Politics', description: 'Government and political news', type: 'topic' },
+                { name: 'Technology', description: 'Tech innovations and companies', type: 'topic' },
+                { name: 'Business', description: 'Markets and economy', type: 'topic' },
+                { name: 'Health', description: 'Medical and wellness news', type: 'topic' },
+                { name: 'Science', description: 'Scientific discoveries', type: 'topic' },
+                { name: 'Entertainment', description: 'Movies, TV, and celebrities', type: 'topic' },
+                { name: 'Sports', description: 'Athletics and competitions', type: 'topic' },
+                { name: 'Climate', description: 'Environment and climate change', type: 'topic' },
+                { name: 'AI News', description: 'Artificial intelligence developments', type: 'topic' },
+                { name: 'World News', description: 'International events', type: 'topic' }
+            ],
+            keywords: [
+                { name: 'Breaking News', description: 'Latest urgent developments', type: 'keyword' },
+                { name: 'Elections', description: 'Political elections worldwide', type: 'keyword' },
+                { name: 'Stock Market', description: 'Financial markets and trading', type: 'keyword' },
+                { name: 'COVID-19', description: 'Pandemic and health updates', type: 'keyword' },
+                { name: 'Ukraine', description: 'Conflict and international relations', type: 'keyword' },
+                { name: 'Inflation', description: 'Economic price increases', type: 'keyword' },
+                { name: 'Space', description: 'NASA and space exploration', type: 'keyword' },
+                { name: 'Cryptocurrency', description: 'Bitcoin and digital currencies', type: 'keyword' },
+                { name: 'Artificial Intelligence', description: 'AI research and applications', type: 'keyword' },
+                { name: 'Climate Change', description: 'Environmental impacts', type: 'keyword' }
+            ]
+        };
+
+        // Enhanced search functionality
+        function enhancedSearch(query) {
+            if (!query.trim()) {
+                return [];
+            }
+
+            const searchTerm = query.toLowerCase();
+            const results = [];
+
+            // Search through all categories with intelligent matching
+            Object.values(SEARCH_DATA).forEach(category => {
+                category.forEach(item => {
+                    const nameMatch = item.name.toLowerCase().includes(searchTerm);
+                    const descriptionMatch = item.description.toLowerCase().includes(searchTerm);
+                    const partialMatch = searchTerm.split('').every(char => 
+                        item.name.toLowerCase().includes(char) || item.description.toLowerCase().includes(char)
+                    );
+
+                    // Smart matching: prioritize exact matches, then partial matches
+                    if (nameMatch || descriptionMatch || partialMatch) {
+                        const score = calculateMatchScore(item, searchTerm);
+                        results.push({ ...item, score });
+                    }
+                });
+            });
+
+            // Sort by relevance score and return top 8
+            return results.sort((a, b) => b.score - a.score).slice(0, 8);
+        }
+
+        function calculateMatchScore(item, searchTerm) {
+            let score = 0;
+            const name = item.name.toLowerCase();
+            const description = item.description.toLowerCase();
+
+            // Exact match in name (highest priority)
+            if (name === searchTerm) score += 100;
+            
+            // Starts with search term
+            if (name.startsWith(searchTerm)) score += 50;
+            
+            // Contains search term in name
+            if (name.includes(searchTerm)) score += 30;
+            
+            // Contains search term in description
+            if (description.includes(searchTerm)) score += 10;
+            
+            // Partial character matching (for "f" -> "fox news")
+            const allCharsMatch = searchTerm.split('').every(char => name.includes(char));
+            if (allCharsMatch) score += 20;
+
+            return score;
+        }
+
+        function showSearchSuggestions(query) {
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            
+            if (!query.trim()) {
+                suggestionsContainer.classList.remove('active');
+                return;
+            }
+
+            const suggestions = enhancedSearch(query);
+            
+            if (suggestions.length === 0) {
+                suggestionsContainer.classList.remove('active');
+                return;
+            }
+
+            suggestionsContainer.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.className = 'suggestion-item';
+                
+                // Highlight matching parts
+                const highlightedName = highlightMatch(suggestion.name, query);
+                const highlightedDesc = highlightMatch(suggestion.description, query);
+
+                suggestionItem.innerHTML = `
+                    <div class="suggestion-icon">
+                        <i class="fas ${getSuggestionIcon(suggestion.type)}"></i>
+                    </div>
+                    <div class="suggestion-content">
+                        <div class="suggestion-title">${highlightedName}</div>
+                        <div class="suggestion-description">${highlightedDesc}</div>
+                    </div>
+                    <div class="suggestion-type ${suggestion.type}">
+                        ${suggestion.type.toUpperCase()}
+                    </div>
+                `;
+                
+                suggestionItem.addEventListener('click', () => {
+                    document.getElementById('search-box').value = suggestion.name;
+                    suggestionsContainer.classList.remove('active');
+                    performSearch(suggestion.name);
+                });
+                
+                suggestionsContainer.appendChild(suggestionItem);
+            });
+            
+            suggestionsContainer.classList.add('active');
+        }
+
+        function highlightMatch(text, query) {
+            const lowerText = text.toLowerCase();
+            const lowerQuery = query.toLowerCase();
+            const index = lowerText.indexOf(lowerQuery);
+            
+            if (index >= 0) {
+                const before = text.substring(0, index);
+                const match = text.substring(index, index + query.length);
+                const after = text.substring(index + query.length);
+                
+                return `${before}<span class="suggestion-highlight">${match}</span>${after}`;
+            }
+            
+            // For partial character matching (like "f" -> "fox")
+            let highlighted = text;
+            query.split('').forEach(char => {
+                const charIndex = lowerText.indexOf(char.toLowerCase());
+                if (charIndex >= 0) {
+                    const before = highlighted.substring(0, charIndex);
+                    const match = highlighted.substring(charIndex, charIndex + 1);
+                    const after = highlighted.substring(charIndex + 1);
+                    highlighted = `${before}<span class="suggestion-highlight">${match}</span>${after}`;
+                }
+            });
+            
+            return highlighted;
+        }
+
+        function getSuggestionIcon(type) {
+            const icons = {
+                source: 'fa-newspaper',
+                topic: 'fa-tag',
+                keyword: 'fa-hashtag'
+            };
+            return icons[type] || 'fa-search';
+        }
+
+        function performSearch(query) {
+            console.log('Searching for:', query);
+            // Your existing search functionality here
+            // This will integrate with your current search system
+            searchNews(query);
+        }
+
+        // API Configuration and other existing code...
         const API_CONFIG = {
             gnewsApi: {
                 key: 'd7ce9e191c4bc11b54d13421c7ce2aaf',
@@ -2073,7 +2317,7 @@
                 url: 'https://finnhub.io/api/v1/'
             },
             rssFeeds: {
-                // Major International Sources
+                // ... (your existing RSS feeds configuration)
                 bbc: 'https://feeds.bbci.co.uk/news/rss.xml',
                 cnn: 'http://rss.cnn.com/rss/edition.rss',
                 fox: 'https://moxie.foxnews.com/google-publisher/latest.xml',
@@ -2096,8 +2340,6 @@
                 huffpost: 'https://www.huffpost.com/section/front-page/feed',
                 forbes: 'https://www.forbes.com/real-time/feed2/',
                 businessinsider: 'https://markets.businessinsider.com/rss/news',
-                
-                // Additional International Sources
                 theguardian: 'https://www.theguardian.com/international/rss',
                 independent: 'https://www.independent.co.uk/news/world/rss',
                 telegraph: 'https://www.telegraph.co.uk/news/rss.xml',
@@ -2108,8 +2350,6 @@
                 scmp: 'https://www.scmp.com/rss/91/feed',
                 japantimes: 'https://www.japantimes.co.jp/feed/',
                 straitstimes: 'https://www.straitstimes.com/news/asia/rss.xml',
-                
-                // Technology Sources
                 techcrunch: 'https://techcrunch.com/feed/',
                 wired: 'https://www.wired.com/feed/rss',
                 theverge: 'https://www.theverge.com/rss/index.xml',
@@ -2118,16 +2358,12 @@
                 mashable: 'https://mashable.com/feed',
                 gizmodo: 'https://gizmodo.com/rss',
                 recode: 'https://www.vox.com/rss/recode/index.xml',
-                
-                // Business & Finance Sources
                 cnbc: 'https://www.cnbc.com/id/10000664/device/rss/rss.html',
                 marketwatch: 'https://feeds.content.dowjones.io/public/rss/mw_business',
                 financialtimes: 'https://www.ft.com/?format=rss',
                 economist: 'https://www.economist.com/the-world-this-week/rss.xml',
                 fortune: 'https://fortune.com/feed/',
                 money: 'https://money.com/feed/',
-                
-                // Science & Health Sources
                 scientificamerican: 'https://rss.sciam.com/ScientificAmerican-Global',
                 nature: 'https://www.nature.com/nature.rss',
                 sciencemag: 'https://www.science.org/rss/news_current.xml',
@@ -2136,7 +2372,7 @@
             }
         };
 
-        // Enhanced breaking news keywords for better filtering
+        // Breaking news keywords
         const BREAKING_NEWS_KEYWORDS = [
             'bomb', 'explosion', 'shooting', 'terror', 'attack', 'strike', 'war', 'invasion',
             'crisis', 'emergency', 'disaster', 'earthquake', 'hurricane', 'tsunami', 'fire',
@@ -2994,60 +3230,6 @@
             document.getElementById('current-category').textContent = `Search: "${query}"`;
         }
 
-        // Enhanced search suggestions
-        function showSearchSuggestions(query) {
-            const suggestionsContainer = document.getElementById('search-suggestions');
-            
-            if (!query.trim()) {
-                suggestionsContainer.classList.remove('active');
-                return;
-            }
-            
-            const filteredSuggestions = SEARCH_SUGGESTIONS.filter(suggestion => 
-                suggestion.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 8); // Limit to 8 suggestions
-            
-            if (filteredSuggestions.length === 0) {
-                suggestionsContainer.classList.remove('active');
-                return;
-            }
-            
-            suggestionsContainer.innerHTML = '';
-            
-            filteredSuggestions.forEach(suggestion => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.className = 'suggestion-item';
-                
-                // Highlight matching part of the suggestion
-                const index = suggestion.toLowerCase().indexOf(query.toLowerCase());
-                if (index >= 0) {
-                    const before = suggestion.substring(0, index);
-                    const match = suggestion.substring(index, index + query.length);
-                    const after = suggestion.substring(index + query.length);
-                    
-                    suggestionItem.innerHTML = `
-                        <i class="fas fa-search" style="margin-right: 0.5rem; color: var(--gray);"></i>
-                        ${before}<span class="suggestion-highlight">${match}</span>${after}
-                    `;
-                } else {
-                    suggestionItem.innerHTML = `
-                        <i class="fas fa-search" style="margin-right: 0.5rem; color: var(--gray);"></i>
-                        ${suggestion}
-                    `;
-                }
-                
-                suggestionItem.addEventListener('click', () => {
-                    document.getElementById('search-box').value = suggestion;
-                    suggestionsContainer.classList.remove('active');
-                    searchNews(suggestion);
-                });
-                
-                suggestionsContainer.appendChild(suggestionItem);
-            });
-            
-            suggestionsContainer.classList.add('active');
-        }
-
         // Load stock data for Finance Center
         async function loadStocksForCategory(category) {
             const container = document.getElementById('stocks-container');
@@ -3404,23 +3586,56 @@
         }
 
         function setupEventListeners() {
-            // Search functionality
+            // Enhanced search functionality
             const searchBox = document.getElementById('search-box');
             let searchTimeout;
-            
+
             searchBox.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
                 showSearchSuggestions(this.value);
                 
                 searchTimeout = setTimeout(() => {
-                    searchNews(this.value);
-                }, 500);
+                    if (this.value.trim()) {
+                        performSearch(this.value);
+                    }
+                }, 800);
             });
-            
+
             // Hide suggestions when clicking outside
             document.addEventListener('click', function(e) {
                 if (!e.target.closest('.search-container')) {
                     document.getElementById('search-suggestions').classList.remove('active');
+                }
+            });
+
+            // Keyboard navigation for suggestions
+            searchBox.addEventListener('keydown', function(e) {
+                const suggestions = document.querySelectorAll('.suggestion-item');
+                const activeSuggestion = document.querySelector('.suggestion-item.active');
+                
+                if (e.key === 'ArrowDown' && suggestions.length > 0) {
+                    e.preventDefault();
+                    if (!activeSuggestion) {
+                        suggestions[0].classList.add('active');
+                    } else {
+                        const next = activeSuggestion.nextElementSibling;
+                        if (next) {
+                            activeSuggestion.classList.remove('active');
+                            next.classList.add('active');
+                        }
+                    }
+                } else if (e.key === 'ArrowUp' && suggestions.length > 0) {
+                    e.preventDefault();
+                    if (activeSuggestion) {
+                        const prev = activeSuggestion.previousElementSibling;
+                        if (prev) {
+                            activeSuggestion.classList.remove('active');
+                            prev.classList.add('active');
+                        }
+                    }
+                } else if (e.key === 'Enter' && activeSuggestion) {
+                    e.preventDefault();
+                    activeSuggestion.click();
                 }
             });
             
