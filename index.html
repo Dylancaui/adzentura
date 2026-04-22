@@ -1,201 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Theory of Realized Ascent: An Ecology of Human Potential</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Georgia', serif;
-            line-height: 1.65;
-            color: #1a1a1a;
-            background-color: #fefefe;
-            margin: 0;
-            padding: 0;
-        }
-        header, main, footer {
-            max-width: 900px;
-            margin: auto;
-            padding: 2rem 1rem;
-        }
-        h1, h2, h3 {
-            font-family: 'Times New Roman', serif;
-            color: #0b0b0b;
-            margin-top: 2rem;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-align: center;
-        }
-        h2 {
-            font-size: 1.8rem;
-            margin-top: 3rem;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 0.3rem;
-        }
-        h3 {
-            font-size: 1.4rem;
-            margin-top: 2rem;
-        }
-        p {
-            margin: 1rem 0;
-        }
-        blockquote {
-            margin: 1.5rem 2rem;
-            padding: 1rem 1.5rem;
-            background: #f4f4f4;
-            border-left: 5px solid #999;
-            font-style: italic;
-        }
-        code {
-            font-family: 'Courier New', monospace;
-            background: #eee;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-        }
-        .equation {
-            text-align: center;
-            font-weight: bold;
-            margin: 2rem 0;
-            font-size: 1.2rem;
-        }
-        footer {
-            font-size: 0.85rem;
-            color: #555;
-            text-align: center;
-            border-top: 1px solid #ccc;
-            margin-top: 3rem;
-            padding-top: 1rem;
-        }
-        a {
-            color: #0a6ebd;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Adzentura | Future Holding Company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #05050A;
+      color: #EDF2F8;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ----- LOADING OVERLAY (premium animation) ----- */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #020205;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+      backdrop-filter: blur(3px);
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loading-logo {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #FFFFFF 0%, #9F7AEA 40%, #5A67D8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1.5rem;
+    }
+
+    .loading-spinner {
+      width: 52px;
+      height: 52px;
+      border: 3px solid rgba(159, 122, 234, 0.2);
+      border-top: 3px solid #9F7AEA;
+      border-radius: 50%;
+      animation: spin 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+      margin: 1.5rem auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 0.85rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #9F7AEA;
+      margin-top: 1rem;
+    }
+
+    .loading-sub {
+      margin-top: 0.8rem;
+      font-size: 0.75rem;
+      color: #6B7280;
+    }
+
+    /* ----- MAIN CONTENT (hidden initially) ----- */
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    /* ----- NAVIGATION ----- */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1.2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      background: rgba(5, 5, 10, 0.75);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(159, 122, 234, 0.2);
+      transition: all 0.3s;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(120deg, #FFFFFF, #A78BFA);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.2rem;
+    }
+
+    .nav-links a {
+      color: #CBD5E1;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a:hover {
+      color: #C4B5FD;
+    }
+
+    /* ----- DEMO BADGE (global) ----- */
+    .demo-ribbon {
+      position: fixed;
+      top: 80px;
+      right: -35px;
+      background: linear-gradient(135deg, #7C3AED, #4C1D95);
+      padding: 0.5rem 3rem;
+      transform: rotate(45deg);
+      z-index: 150;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+
+    /* ----- HERO SECTION ----- */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 5% 4rem;
+      background: radial-gradient(circle at 30% 20%, rgba(79, 70, 229, 0.12) 0%, #05050A 80%);
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(to right, #F3E8FF, #C4B5FD, #A78BFA);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      max-width: 950px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #94A3B8;
+      max-width: 680px;
+      margin-bottom: 1.8rem;
+    }
+
+    .demo-badge-header {
+      display: inline-block;
+      background: rgba(124, 58, 237, 0.18);
+      border: 1px solid rgba(167, 139, 250, 0.5);
+      padding: 0.5rem 1.4rem;
+      border-radius: 60px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #C4B5FD;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .release-highlight {
+      background: linear-gradient(145deg, #1E1029, #0B0712);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      display: inline-block;
+      font-size: 0.85rem;
+      border: 1px solid #4C1D9540;
+    }
+
+    /* ----- SECTIONS GENERAL ----- */
+    .section {
+      padding: 5rem 5%;
+      max-width: 1280px;
+      margin: 0 auto;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+
+    .section-title {
+      font-size: 2.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #FFFFFF, #C4B5FD);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .section-sub {
+      color: #8B9BB5;
+      max-width: 700px;
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+
+    /* How it works grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .step-card {
+      background: rgba(16, 14, 28, 0.7);
+      backdrop-filter: blur(4px);
+      border-radius: 28px;
+      padding: 2rem 1.5rem;
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      transition: transform 0.25s ease, border-color 0.2s;
+    }
+
+    .step-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(167, 139, 250, 0.6);
+      background: rgba(30, 25, 55, 0.6);
+    }
+
+    .step-number {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #A78BFA, #7C3AED);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .step-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .step-card p {
+      color: #9AA4BF;
+      line-height: 1.5;
+    }
+
+    /* Portfolio Section: future placeholder / demo */
+    .future-portfolio {
+      background: linear-gradient(145deg, #0A0718, #03020A);
+      border-radius: 2rem;
+      padding: 2rem;
+      text-align: center;
+      border: 1px dashed #7C3AED60;
+    }
+
+    .company-placeholder {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 1.5rem;
+    }
+
+    .future-tag {
+      background: #0E0C1A;
+      border-radius: 2rem;
+      padding: 0.8rem 1.6rem;
+      font-weight: 500;
+      border: 1px solid #2D2352;
+      color: #B9A9F0;
+    }
+
+    /* Founder Section (Bio - humble but professional) */
+    .founder-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3rem;
+      align-items: center;
+      background: linear-gradient(145deg, #0B0818, #05030F);
+      border-radius: 2rem;
+      padding: 2.2rem;
+      border: 1px solid rgba(167, 139, 250, 0.25);
+    }
+
+    .founder-avatar {
+      flex-shrink: 0;
+      width: 140px;
+      height: 140px;
+      background: linear-gradient(135deg, #2D2352, #19113A);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: #C4B5FD;
+      border: 2px solid #A78BFA60;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+    }
+
+    .founder-info h3 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .founder-title {
+      font-size: 0.9rem;
+      color: #A78BFA;
+      margin-bottom: 1rem;
+      letter-spacing: 0.3px;
+    }
+
+    .founder-bio {
+      color: #C9D1E6;
+      max-width: 620px;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .signature-line {
+      margin-top: 1rem;
+      font-style: italic;
+      border-left: 3px solid #A78BFA;
+      padding-left: 1rem;
+      color: #A9B4D4;
+    }
+
+    /* Founded info */
+    .founded-note {
+      background: rgba(124, 58, 237, 0.05);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2.5rem 5%;
+      color: #6C7B96;
+      font-size: 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.03);
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .navbar { padding: 1rem 5%; }
+      .nav-links { gap: 1.2rem; }
+      .section-title { font-size: 1.9rem; }
+      .demo-ribbon { top: 70px; font-size: 0.6rem; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>The Theory of Realized Ascent: An Ecology of Human Potential</h1>
-        <p><strong>Author:</strong> Dylan Castro</p>
-        <p><strong>Date:</strong> March 5, 2026</p>
-    </header>
-    <main>
-        <section id="abstract">
-            <h2>Abstract</h2>
-            <p>This paper presents the Theory of Realized Ascent (TRA), a unified framework for understanding the complete lifecycle of human potential—from its initial emergence to its ultimate expression or tragic waste. Drawing on two decades of observational research, personal narrative, and synthesis of existing psychological and sociological literature, the TRA proposes that potential is not an innate, fixed trait but a dynamic state cultivated by a specific developmental ecosystem. The degree to which an individual achieves "ascent"—the realization of their highest possible capabilities—is determined by the interaction of three ecological systems: the Nutrient Environment, the Suppression Environment, and the individual's Conformity Response. The TRA identifies the primary obstacle to realized ascent as the systematic dismantling of authentic self-direction by social and systemic forces, operating at micro, meso, and macro levels. This paper provides a foundation for empirical research, intervention design, and understanding collective human loss when potential remains dormant.</p>
-        </section>
 
-        <section id="introduction">
-            <h2>Introduction: The Question of What Could Have Been</h2>
-            <p>Every human being enters the world with a unique configuration of cognitive capacity, creative impulse, and temperament. Yet the trajectories of these innate endowments vary widely. Some individuals ascend to remarkable heights of achievement, innovation, and self-fulfillment, while others plateau, regress, or simply never take flight. For centuries, this divergence has been attributed to luck, willpower, or fate. The Theory of Realized Ascent (TRA) argues otherwise: the fulfillment of human potential follows predictable patterns governed by identifiable forces. Human potential develops—or fails to develop—according to the ecological conditions in which it is immersed. The waste of potential is not random; it is the outcome of a system under specific stressors.</p>
+<!-- LOADING SCREEN PREMIUM ANIMATION -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="loading-content">
+    <div class="loading-logo">ADZENTURA</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-text">HOLDING COMPANY · EST. 2025</div>
+    <div class="loading-sub">interactive demo environment</div>
+  </div>
+</div>
 
-            <p>The TRA emerges from lived experience as well as observation. Friends, colleagues, and social media reveal recurring patterns: individuals masking aspirations to avoid mockery, abandoning long-term ambitions due to societal pressure, and chasing viral fantasies that ultimately leave them worse off. These observations form the foundation of the theory.</p>
-        </section>
+<!-- MAIN WEBSITE CONTENT -->
+<div id="mainContent" class="main-content">
+  <!-- subtle demo ribbon -->
+  <div class="demo-ribbon">DEMO PREVIEW</div>
 
-        <section id="definitions">
-            <h2>Core Definitions: The Vocabulary of Ascent</h2>
-            <p><strong>Potential</strong> is the emergent capacity for complex achievement beyond an individual’s current circumstances. It is dynamic, arising from the interaction between cognitive architecture and environmental stimulation. Like a seed, it requires nurturing conditions to manifest.</p>
-            <p><strong>Ascent</strong> is the process of actualizing potential through sustained effort, authentic self-direction, and progressively complex achievements. Ascent is distinct from fame or wealth; it is the alignment of life with authentic capabilities and aspirations.</p>
-            <p><strong>Wasted potential</strong> refers to arrested ascent, where an individual is prevented from realizing significant achievement. The tragedy is often invisible; the individual does not mourn the path not taken because it was never perceived.</p>
-        </section>
+  <nav class="navbar">
+    <div class="logo">ADZENTURA</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#founder">Leadership</a>
+    </div>
+  </nav>
 
-        <section id="nutrients">
-            <h2>The First Principle: The Nutrient Environment</h2>
-            <p>Potential requires specific nutrients:</p>
-            <ul>
-                <li><strong>Cognitive stimulation:</strong> Exposure to complex ideas, education, and discourse.</li>
-                <li><strong>Psychological safety:</strong> Environments that allow exploration without catastrophic fear of failure.</li>
-                <li><strong>Exposure to possibility:</strong> Mentorship, travel, and role models that expand the horizon.</li>
-                <li><strong>Affirmation and mirroring:</strong> Recognition of emerging talents fosters self-perception of capacity.</li>
-                <li><strong>Material stability:</strong> Reliable resources such as food, shelter, and safety enable growth.</li>
-            </ul>
-        </section>
+  <section class="hero">
+    <div class="demo-badge-header">✦ DEMO SITE · OFFICIAL RELEASE 2027 ✦</div>
+    <h1>Building tomorrow’s<br>holding company today</h1>
+    <p>Adzentura is a newly founded holding company with a long-term vision. This is a demonstration of our future ecosystem — fully operational launch scheduled for 2027.</p>
+    <div class="release-highlight">🚀 Full release: 2027 · currently in stealth building phase</div>
+  </section>
 
-        <section id="suppression">
-            <h2>The Second Principle: The Suppression Environment</h2>
-            <p>Suppression factors diminish potential at micro, meso, and macro levels:</p>
-            <ul>
-                <li><strong>Micro:</strong> Peer pressure, mockery, substance abuse, and trauma interfere with development.</li>
-                <li><strong>Meso:</strong> Societal conformity, anti-intellectual norms, and social media distort horizons and encourage abandonment of authentic paths.</li>
-                <li><strong>Macro:</strong> Structural barriers like poor education, economic determinism, and systemic deprivation restrict opportunities and aspirations.</li>
-            </ul>
-            <p>Specific intersections, such as the Marriage and Life Milestone Trap, illustrate how micro, meso, and macro suppression combine to prevent ascent.</p>
-        </section>
+  <!-- HOW IT WORKS SECTION (future-forward) -->
+  <div id="how-it-works" class="section">
+    <h2 class="section-title">How Adzentura will operate</h2>
+    <div class="section-sub">A strategic blueprint for acquiring, nurturing, and scaling category-defining companies.</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">01</div>
+        <h3>Strategic vision</h3>
+        <p>Identify high-potential niches and build a curated portfolio from ground zero — discipline over hype.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">02</div>
+        <h3>Operational backbone</h3>
+        <p>Develop shared services, AI infrastructure, and leadership frameworks to empower every future subsidiary.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">03</div>
+        <h3>Ecosystem synergy</h3>
+        <p>Enable cross-pollination between portfolio companies, driving innovation and shared growth.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">04</div>
+        <h3>Long-term value</h3>
+        <p>Patient capital & deep operational excellence — build for decades, not quarters.</p>
+      </div>
+    </div>
+  </div>
 
-        <section id="conformity">
-            <h2>The Third Principle: The Conformity Response</h2>
-            <p>The Conformity Response is the individual's adaptive reaction to the perceived threat of social exclusion. Fear of being cast out leads individuals to perform socially acceptable versions of themselves. Every individual has a <strong>Conformity Threshold</strong>, beyond which authentic aspirations are abandoned and ascent is arrested.</p>
-        </section>
+  <!-- PORTFOLIO SECTION (No official companies yet) -->
+  <div id="portfolio" class="section">
+    <h2 class="section-title">Portfolio · Inception phase</h2>
+    <div class="section-sub">Adzentura currently has no official subsidiaries — we are in active development. The vision is to own and operate a diverse set of companies starting post-2027 launch.</div>
+    <div class="future-portfolio">
+      <p style="color: #B9A9F0; margin-bottom: 1rem;">✦ Future verticals under consideration ✦</p>
+      <div class="company-placeholder">
+        <span class="future-tag">AI Infrastructure</span>
+        <span class="future-tag">Fintech Solutions</span>
+        <span class="future-tag">Sustainable Logistics</span>
+        <span class="future-tag">Digital Media</span>
+        <span class="future-tag">Venture Studios</span>
+      </div>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem; color:#7D8AAB;">No official valuation · currently pre-revenue · building foundations</p>
+    </div>
+  </div>
 
-        <section id="trajectory">
-            <h2>The Lifecycle of Potential: A Developmental Trajectory</h2>
-            <ol>
-                <li><strong>Germination (0–7 years):</strong> Potential exists as possibility; psychological safety and attachment are critical.</li>
-                <li><strong>Exploration (8–18 years):</strong> Testing capacities; early pressures of conformity appear.</li>
-                <li><strong>Divergence (18–25 years):</strong> Major life choices reveal whether ascent continues or is arrested.</li>
-                <li><strong>Plateau or Ascent (25+ years):</strong> Continued realization of potential or sustained plateau if arrested.</li>
-            </ol>
-        </section>
+  <!-- FOUNDER SECTION: Dylan Castro, founded 2025, no recognition yet — professional bio -->
+  <div id="founder" class="section">
+    <h2 class="section-title">Leadership & foundation</h2>
+    <div class="section-sub">A new chapter — driven by vision, integrity, and long-term craftsmanship.</div>
+    <div class="founder-container">
+      <div class="founder-avatar">DC</div>
+      <div class="founder-info">
+        <h3>Dylan Castro</h3>
+        <div class="founder-title">Founder & CEO, Adzentura</div>
+        <p class="founder-bio">Dylan Castro founded Adzentura in 2025 with a singular focus: to build a world-class holding company from the ground up. While not yet recognized in public markets or institutional rankings, Dylan brings deep strategic thinking, operational discipline, and a relentless commitment to long-term value creation. Prior to Adzentura, Dylan worked on independent ventures and studied business architecture & systems design.</p>
+        <p class="founder-bio">As a first-time founder in the holding space, Dylan is currently shaping Adzentura's core blueprint — from legal structure to portfolio strategy. The company operates with zero debt and a lean philosophy, targeting a full ecosystem launch in 2027. Dylan's leadership is rooted in transparency, patience, and the belief that enduring enterprises are built one brick at a time.</p>
+        <div class="signature-line">“We are not recognized today, but recognition is never the goal — building something that outlasts us is.” — Dylan Castro</div>
+      </div>
+    </div>
+    <div class="founded-note">
+      <span style="font-weight: 700; color: #C4B5FD;">📅 Founded in 2025</span><br>
+      <span style="font-size: 0.9rem;">Adzentura is a newly established holding company with no official valuation, no subsidiaries yet, and a clear roadmap toward 2027 full release. This site represents the vision and demonstration of what's being built.</span>
+    </div>
+  </div>
 
-        <section id="equation">
-            <h2>The Unified Model: An Equation of Ascent</h2>
-            <p class="equation">A = f(N - S) × (1 - C)</p>
-            <p>Where:</p>
-            <ul>
-                <li>A = Degree of Ascent (potential realized)</li>
-                <li>N = Nutrient Environment (cumulative score)</li>
-                <li>S = Suppression Environment (cumulative score)</li>
-                <li>C = Conformity Response Coefficient (0–1 scale)</li>
-            </ul>
-        </section>
+  <!-- ADDITIONAL DEMO SECTION: full release countdown vibe -->
+  <div class="section" style="border-bottom: none; text-align: center; padding-top: 1rem;">
+    <div style="background: linear-gradient(125deg, #090714, #02010A); border-radius: 2rem; padding: 2rem 1.5rem; border: 1px solid #312A5A;">
+      <span style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #D8B4FE, #9F7AEA); -webkit-background-clip: text; background-clip: text; color: transparent;">Coming 2027</span>
+      <p style="margin-top: 1rem; max-width: 550px; margin-left: auto; margin-right: auto; color: #A0AEC0;">Adzentura will officially launch its holding operations, first acquisitions, and operational ecosystem. This demo reflects our direction, ambition, and professional foundation.</p>
+      <div style="margin-top: 1.2rem; font-size: 0.75rem; background: #0F0B1C; display: inline-block; padding: 0.4rem 1.2rem; border-radius: 40px;">demo.adzentura · interactive preview</div>
+    </div>
+  </div>
 
-        <section id="predictions">
-            <h2>Predictive Claims and Falsifiability</h2>
-            <p>The TRA offers testable predictions, including:</p>
-            <ul>
-                <li>Individuals from nutrient-rich environments show higher authentic ascent.</li>
-                <li>Higher Conformity Response correlates with abandonment of authentic paths.</li>
-                <li>Interventions reducing social fear increase ascent.</li>
-                <li>Systemic deprivation cycles amplify suppression effects across levels.</li>
-                <li>Early partnerships and life milestones can increase arrested ascent.</li>
-            </ul>
-        </section>
+  <div class="footer">
+    © 2025 Adzentura Holding Company — Demo environment. Founded in 2025. Official release scheduled for 2027. No official valuation or subsidiaries.
+  </div>
+</div>
 
-        <section id="collective">
-            <h2>The Corollary of Collective Loss</h2>
-            <p>Every unascended individual represents a loss to society: innovations unrealized, contributions unmade, and cultural richness diminished. The TRA frames wasted potential as a measurable collective deficit.</p>
-        </section>
+<script>
+  // Loading screen control: show for 2.2 seconds, then fade out main content reveal
+  window.addEventListener('DOMContentLoaded', () => {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const mainContent = document.getElementById('mainContent');
 
-        <section id="testimony">
-            <h2>The Observer's Testimony</h2>
-            <p>The TRA is informed by direct observation and lived experience, reinforcing patterns of suppression, fear, and abandonment across social contexts.</p>
-        </section>
+    mainContent.style.opacity = '0';
 
-        <section id="conclusion">
-            <h2>Conclusion: The Unfinished Ascent</h2>
-            <p>The Theory of Realized Ascent provides a lens for understanding human development ecologically. Potential is not fixed; it must be nourished. Suppressive forces are human-made and thus can be mitigated. Understanding the conditions for ascent is the first step toward reducing collective waste and enabling more individuals to realize their highest potential.</p>
-        </section>
+    setTimeout(() => {
+      loadingOverlay.style.opacity = '0';
+      setTimeout(() => {
+        loadingOverlay.style.display = 'none';
+        mainContent.style.opacity = '1';
+      }, 1000);
+    }, 2100); // smooth loading animation experience
+  });
 
-        <section id="references">
-            <h2>References</h2>
-            <ul>
-                <li>Bandura, A. (1997). <em>Self-Efficacy: The Exercise of Control</em>. W.H. Freeman.</li>
-                <li>Bowlby, J. (1969). <em>Attachment and Loss, Vol. 1: Attachment</em>. Basic Books.</li>
-                <li>Bronfenbrenner, U. (1979). <em>The Ecology of Human Development</em>. Harvard University Press.</li>
-                <li>Csikszentmihalyi, M. (1990). <em>Flow: The Psychology of Optimal Experience</em>. Harper & Row.</li>
-                <li>Diamond, A. (2013). Executive functions. <em>Annual Review of Psychology, 64</em>, 135-168.</li>
-                <li>Dweck, C. S. (2006). <em>Mindset: The New Psychology of Success</em>. Random House.</li>
-                <li>Evans, G. W., & Schamberg, M. A. (2009). Childhood poverty, chronic stress, and adult working memory. <em>PNAS, 106(16)</em>, 6545-6549.</li>
-                <li>Maslow, A. H. (1943). A theory of human motivation. <em>Psychological Review, 50(4)</em>, 370-396.</li>
-                <li>Putnam, R. D. (2015). <em>Our Kids: The American Dream in Crisis</em>. Simon & Schuster.</li>
-                <li>Sen, A. (1999). <em>Development as Freedom</em>. Oxford University Press.</li>
-                <li>Vygotsky, L. S. (1978). <em>Mind in Society: The Development of Higher Psychological Processes</em>. Harvard University Press.</li>
-            </ul>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Dylan Castro.. <br> .</p>
-    </footer>
+  // Smooth scroll for navigation
+  document.querySelectorAll('.nav-links a, .hero a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const hash = this.getAttribute('href');
+      if (hash && hash.startsWith('#')) {
+        const target = document.querySelector(hash);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  });
+</script>
 </body>
 </html>
