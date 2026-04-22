@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Adzentura | Future Holding Company</title>
+  <title>Adzentura | Strategic Holding Company</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
     * {
@@ -131,23 +131,6 @@
       color: #C4B5FD;
     }
 
-    /* ----- DEMO BADGE (global) ----- */
-    .demo-ribbon {
-      position: fixed;
-      top: 80px;
-      right: -35px;
-      background: linear-gradient(135deg, #7C3AED, #4C1D95);
-      padding: 0.5rem 3rem;
-      transform: rotate(45deg);
-      z-index: 150;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      pointer-events: none;
-    }
-
     /* ----- HERO SECTION ----- */
     .hero {
       min-height: 85vh;
@@ -179,26 +162,15 @@
       margin-bottom: 1.8rem;
     }
 
-    .demo-badge-header {
-      display: inline-block;
-      background: rgba(124, 58, 237, 0.18);
-      border: 1px solid rgba(167, 139, 250, 0.5);
-      padding: 0.5rem 1.4rem;
-      border-radius: 60px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: #C4B5FD;
-      margin-bottom: 2rem;
-      backdrop-filter: blur(4px);
-    }
-
     .release-highlight {
       background: linear-gradient(145deg, #1E1029, #0B0712);
-      padding: 0.5rem 1.2rem;
-      border-radius: 40px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 60px;
       display: inline-block;
       font-size: 0.85rem;
-      border: 1px solid #4C1D9540;
+      border: 1px solid #7C3AED60;
+      font-weight: 500;
+      backdrop-filter: blur(4px);
     }
 
     /* ----- SECTIONS GENERAL ----- */
@@ -271,13 +243,116 @@
       line-height: 1.5;
     }
 
-    /* Portfolio Section: future placeholder / demo */
+    /* Portfolio Section: Jemway.com feature */
+    .acquisition-card {
+      background: linear-gradient(145deg, #0E0B1C, #080614);
+      border-radius: 2rem;
+      padding: 2rem;
+      border: 1px solid rgba(167, 139, 250, 0.35);
+      margin-bottom: 2.5rem;
+      transition: all 0.2s;
+    }
+
+    .acquisition-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .acquisition-badge {
+      background: #7C3AED20;
+      border: 1px solid #A78BFA;
+      border-radius: 40px;
+      padding: 0.25rem 0.9rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #C4B5FD;
+    }
+
+    .jemway-desc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 1.2rem;
+      align-items: center;
+    }
+
+    .jemway-globe-preview {
+      flex: 1;
+      min-width: 220px;
+      background: radial-gradient(circle at 30% 40%, #1F1A3A, #02010A);
+      border-radius: 1.5rem;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid #3A2C70;
+    }
+
+    .globe-icon {
+      font-size: 3.5rem;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .dot-cluster {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1rem 0;
+    }
+
+    .globe-dot {
+      width: 12px;
+      height: 12px;
+      background: #A78BFA;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #A78BFA;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .globe-dot:hover {
+      transform: scale(1.4);
+      background: #D8B4FE;
+    }
+
+    .jemway-text {
+      flex: 2;
+    }
+
+    .jemway-text p {
+      color: #CBD5E1;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .feature-list span {
+      background: #1E173B;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #C4B5FD;
+    }
+
+    /* future placeholder for other verticals */
     .future-portfolio {
       background: linear-gradient(145deg, #0A0718, #03020A);
       border-radius: 2rem;
       padding: 2rem;
       text-align: center;
       border: 1px dashed #7C3AED60;
+      margin-top: 1rem;
     }
 
     .company-placeholder {
@@ -291,13 +366,14 @@
     .future-tag {
       background: #0E0C1A;
       border-radius: 2rem;
-      padding: 0.8rem 1.6rem;
+      padding: 0.6rem 1.4rem;
       font-weight: 500;
       border: 1px solid #2D2352;
       color: #B9A9F0;
+      font-size: 0.85rem;
     }
 
-    /* Founder Section (Bio - humble but professional) */
+    /* Founder Section */
     .founder-container {
       display: flex;
       flex-wrap: wrap;
@@ -353,7 +429,6 @@
       color: #A9B4D4;
     }
 
-    /* Founded info */
     .founded-note {
       background: rgba(124, 58, 237, 0.05);
       border-radius: 1.5rem;
@@ -362,7 +437,6 @@
       margin-top: 1rem;
     }
 
-    /* Footer */
     .footer {
       text-align: center;
       padding: 2.5rem 5%;
@@ -376,7 +450,7 @@
       .navbar { padding: 1rem 5%; }
       .nav-links { gap: 1.2rem; }
       .section-title { font-size: 1.9rem; }
-      .demo-ribbon { top: 70px; font-size: 0.6rem; }
+      .acquisition-title { font-size: 1.4rem; }
     }
   </style>
 </head>
@@ -388,15 +462,12 @@
     <div class="loading-logo">ADZENTURA</div>
     <div class="loading-spinner"></div>
     <div class="loading-text">HOLDING COMPANY · EST. 2025</div>
-    <div class="loading-sub">interactive demo environment</div>
+    <div class="loading-sub">building the future ecosystem</div>
   </div>
 </div>
 
 <!-- MAIN WEBSITE CONTENT -->
 <div id="mainContent" class="main-content">
-  <!-- subtle demo ribbon -->
-  <div class="demo-ribbon">DEMO PREVIEW</div>
-
   <nav class="navbar">
     <div class="logo">ADZENTURA</div>
     <div class="nav-links">
@@ -408,110 +479,148 @@
   </nav>
 
   <section class="hero">
-    <div class="demo-badge-header">✦ DEMO SITE · OFFICIAL RELEASE 2027 ✦</div>
     <h1>Building tomorrow’s<br>holding company today</h1>
-    <p>Adzentura is a newly founded holding company with a long-term vision. This is a demonstration of our future ecosystem — fully operational launch scheduled for 2027.</p>
-    <div class="release-highlight">🚀 Full release: 2027 · currently in stealth building phase</div>
+    <p>Adzentura is a newly founded holding company with a clear long-term vision. This platform represents our growing ecosystem — official public launch scheduled for 2027.</p>
+    <div class="release-highlight">🌐 Public launch: 2027 · currently in active development & strategic acquisition phase</div>
   </section>
 
-  <!-- HOW IT WORKS SECTION (future-forward) -->
+  <!-- HOW IT WORKS SECTION -->
   <div id="how-it-works" class="section">
-    <h2 class="section-title">How Adzentura will operate</h2>
-    <div class="section-sub">A strategic blueprint for acquiring, nurturing, and scaling category-defining companies.</div>
+    <h2 class="section-title">How Adzentura operates</h2>
+    <div class="section-sub">A disciplined blueprint for acquiring, scaling, and empowering industry-defining companies.</div>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-number">01</div>
-        <h3>Strategic vision</h3>
-        <p>Identify high-potential niches and build a curated portfolio from ground zero — discipline over hype.</p>
+        <h3>Strategic Acquisition</h3>
+        <p>We identify visionary platforms and integrate them under Adzentura's long-term capital & operational framework.</p>
       </div>
       <div class="step-card">
         <div class="step-number">02</div>
-        <h3>Operational backbone</h3>
-        <p>Develop shared services, AI infrastructure, and leadership frameworks to empower every future subsidiary.</p>
+        <h3>Operational Empowerment</h3>
+        <p>Portfolio companies retain their identity while gaining access to shared services, infrastructure, and strategic direction.</p>
       </div>
       <div class="step-card">
         <div class="step-number">03</div>
-        <h3>Ecosystem synergy</h3>
-        <p>Enable cross-pollination between portfolio companies, driving innovation and shared growth.</p>
+        <h3>Synergy & Scale</h3>
+        <p>Cross-collaboration between subsidiaries unlocks new revenue channels, AI-driven insights, and global reach.</p>
       </div>
       <div class="step-card">
         <div class="step-number">04</div>
-        <h3>Long-term value</h3>
-        <p>Patient capital & deep operational excellence — build for decades, not quarters.</p>
+        <h3>Performance Excellence</h3>
+        <p>Data-driven governance and leadership development ensure sustainable, ethical growth across all entities.</p>
       </div>
     </div>
   </div>
 
-  <!-- PORTFOLIO SECTION (No official companies yet) -->
+  <!-- PORTFOLIO SECTION: includes Jemway.com acquisition -->
   <div id="portfolio" class="section">
-    <h2 class="section-title">Portfolio · Inception phase</h2>
-    <div class="section-sub">Adzentura currently has no official subsidiaries — we are in active development. The vision is to own and operate a diverse set of companies starting post-2027 launch.</div>
+    <h2 class="section-title">Portfolio · Holdings</h2>
+    <div class="section-sub">Adzentura owns and operates a curated selection of innovative companies. As of April 22, 2026, we are proud to announce our first acquisition.</div>
+    
+    <!-- Jemway.com Acquisition Card -->
+    <div class="acquisition-card">
+      <div class="acquisition-title">
+        jemway.com 
+        <span class="acquisition-badge">Acquired April 22, 2026</span>
+      </div>
+      <div class="jemway-desc">
+        <div class="jemway-globe-preview">
+          <div class="globe-icon">🌍</div>
+          <div class="dot-cluster">
+            <div class="globe-dot" title="Tokyo, Japan"></div>
+            <div class="globe-dot" title="New York, USA"></div>
+            <div class="globe-dot" title="London, UK"></div>
+            <div class="globe-dot" title="São Paulo, Brazil"></div>
+            <div class="globe-dot" title="Cape Town, SA"></div>
+          </div>
+          <p style="font-size: 0.7rem; margin-top: 0.5rem; color:#B9A9F0;">interactive globe • click any dot</p>
+        </div>
+        <div class="jemway-text">
+          <p><strong>Jemway</strong> is a next‑generation social media platform built around a interactive globe. Users share photos that appear as dynamic dots across the world — click any dot to reveal the location, the image, and the story behind it. It’s visual discovery, reimagined.</p>
+          <p>With a sleek globe interface, Jemway transforms how people explore real‑time moments from every corner of the earth. From bustling cities to remote landscapes, every post becomes a coordinate on the map.</p>
+          <div class="feature-list">
+            <span>🌎 3D Interactive Globe</span>
+            <span>📍 Geo‑tagged moments</span>
+            <span>📸 Photo stories</span>
+            <span>🔍 Explore by region</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upcoming verticals / no other official companies yet -->
     <div class="future-portfolio">
-      <p style="color: #B9A9F0; margin-bottom: 1rem;">✦ Future verticals under consideration ✦</p>
+      <p style="color: #B9A9F0; margin-bottom: 1rem;">✦ Expanding portfolio — future verticals in development ✦</p>
       <div class="company-placeholder">
         <span class="future-tag">AI Infrastructure</span>
         <span class="future-tag">Fintech Solutions</span>
-        <span class="future-tag">Sustainable Logistics</span>
-        <span class="future-tag">Digital Media</span>
-        <span class="future-tag">Venture Studios</span>
+        <span class="future-tag">Digital Media Lab</span>
+        <span class="future-tag">Sustainable Tech</span>
       </div>
-      <p style="margin-top: 1.5rem; font-size: 0.8rem; color:#7D8AAB;">No official valuation · currently pre-revenue · building foundations</p>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem; color:#7D8AAB;">Currently, Jemway.com is the only official subsidiary. More acquisitions to be announced post‑2027 public launch.</p>
     </div>
   </div>
 
-  <!-- FOUNDER SECTION: Dylan Castro, founded 2025, no recognition yet — professional bio -->
+  <!-- FOUNDER SECTION: Dylan Castro, founded 2025 -->
   <div id="founder" class="section">
     <h2 class="section-title">Leadership & foundation</h2>
-    <div class="section-sub">A new chapter — driven by vision, integrity, and long-term craftsmanship.</div>
+    <div class="section-sub">Vision, patience, and the art of building enduring enterprises.</div>
     <div class="founder-container">
       <div class="founder-avatar">DC</div>
       <div class="founder-info">
         <h3>Dylan Castro</h3>
         <div class="founder-title">Founder & CEO, Adzentura</div>
-        <p class="founder-bio">Dylan Castro founded Adzentura in 2025 with a singular focus: to build a world-class holding company from the ground up. While not yet recognized in public markets or institutional rankings, Dylan brings deep strategic thinking, operational discipline, and a relentless commitment to long-term value creation. Prior to Adzentura, Dylan worked on independent ventures and studied business architecture & systems design.</p>
-        <p class="founder-bio">As a first-time founder in the holding space, Dylan is currently shaping Adzentura's core blueprint — from legal structure to portfolio strategy. The company operates with zero debt and a lean philosophy, targeting a full ecosystem launch in 2027. Dylan's leadership is rooted in transparency, patience, and the belief that enduring enterprises are built one brick at a time.</p>
-        <div class="signature-line">“We are not recognized today, but recognition is never the goal — building something that outlasts us is.” — Dylan Castro</div>
+        <p class="founder-bio">Dylan Castro founded Adzentura in 2025 with a clear mandate: build a holding company defined by strategic discipline and long-term value creation. While still early in the journey, Dylan has already secured the first landmark acquisition — Jemway.com — in April 2026, marking the first step toward a diversified ecosystem.</p>
+        <p class="founder-bio">Dylan’s approach combines operational rigor with a founder-first mindset. Prior to Adzentura, he studied business architecture and led independent digital ventures. His vision is to scale Adzentura into a globally respected holding group, with a public launch set for 2027. Dylan personally oversees acquisition strategy, cultural integrity, and technological innovation across the portfolio.</p>
+        <div class="signature-line">“We are building patiently, acquiring deliberately, and thinking in decades — not quarters.” — Dylan Castro</div>
       </div>
     </div>
     <div class="founded-note">
-      <span style="font-weight: 700; color: #C4B5FD;">📅 Founded in 2025</span><br>
-      <span style="font-size: 0.9rem;">Adzentura is a newly established holding company with no official valuation, no subsidiaries yet, and a clear roadmap toward 2027 full release. This site represents the vision and demonstration of what's being built.</span>
+      <span style="font-weight: 700; color: #C4B5FD;">📅 Founded in 2025 · First acquisition: Jemway.com (April 22, 2026)</span><br>
+      <span style="font-size: 0.9rem;">Adzentura is in active development with a planned public release in 2027. No official valuation disclosed — focused on strategic growth and innovation.</span>
     </div>
   </div>
 
-  <!-- ADDITIONAL DEMO SECTION: full release countdown vibe -->
+  <!-- public launch callout -->
   <div class="section" style="border-bottom: none; text-align: center; padding-top: 1rem;">
     <div style="background: linear-gradient(125deg, #090714, #02010A); border-radius: 2rem; padding: 2rem 1.5rem; border: 1px solid #312A5A;">
-      <span style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #D8B4FE, #9F7AEA); -webkit-background-clip: text; background-clip: text; color: transparent;">Coming 2027</span>
-      <p style="margin-top: 1rem; max-width: 550px; margin-left: auto; margin-right: auto; color: #A0AEC0;">Adzentura will officially launch its holding operations, first acquisitions, and operational ecosystem. This demo reflects our direction, ambition, and professional foundation.</p>
-      <div style="margin-top: 1.2rem; font-size: 0.75rem; background: #0F0B1C; display: inline-block; padding: 0.4rem 1.2rem; border-radius: 40px;">demo.adzentura · interactive preview</div>
+      <span style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #D8B4FE, #9F7AEA); -webkit-background-clip: text; background-clip: text; color: transparent;">Public Launch: 2027</span>
+      <p style="margin-top: 1rem; max-width: 550px; margin-left: auto; margin-right: auto; color: #A0AEC0;">Adzentura will officially open its ecosystem to the public in 2027. Until then, we continue to build, acquire, and refine — starting with Jemway.com as our flagship social platform.</p>
+      <div style="margin-top: 1.2rem; font-size: 0.75rem; background: #0F0B1C; display: inline-block; padding: 0.4rem 1.2rem; border-radius: 40px;">adzentura.com · private development phase</div>
     </div>
   </div>
 
   <div class="footer">
-    © 2025 Adzentura Holding Company — Demo environment. Founded in 2025. Official release scheduled for 2027. No official valuation or subsidiaries.
+    © 2025–2026 Adzentura Holding Company — Founded 2025. First acquisition: Jemway.com (April 22, 2026). Public release scheduled for 2027.
   </div>
 </div>
 
 <script>
-  // Loading screen control: show for 2.2 seconds, then fade out main content reveal
+  // Interactive demo for Jemway globe dots (alert simulation)
+  document.querySelectorAll('.globe-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const location = dot.getAttribute('title') || 'unknown location';
+      alert(`📍 Jemway globe interaction\nPhoto from ${location}\n(Interactive demo — full experience on Jemway.com)`);
+    });
+  });
+
+  // Loading screen control
   window.addEventListener('DOMContentLoaded', () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     const mainContent = document.getElementById('mainContent');
-
     mainContent.style.opacity = '0';
-
     setTimeout(() => {
       loadingOverlay.style.opacity = '0';
       setTimeout(() => {
         loadingOverlay.style.display = 'none';
         mainContent.style.opacity = '1';
       }, 1000);
-    }, 2100); // smooth loading animation experience
+    }, 2100);
   });
 
   // Smooth scroll for navigation
-  document.querySelectorAll('.nav-links a, .hero a[href^="#"]').forEach(anchor => {
+  document.querySelectorAll('.nav-links a').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const hash = this.getAttribute('href');
       if (hash && hash.startsWith('#')) {
